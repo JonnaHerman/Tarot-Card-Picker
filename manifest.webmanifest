@@ -1,0 +1,16 @@
+{
+  "name": "Lunar Arcana - Tarot Card Picker",
+  "short_name": "Lunar Arcana",
+  "description": "A three-card Rider–Waite–Smith tarot picker.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#080611",
+  "theme_color": "#0b0812",
+  "orientation": "portrait-primary",
+  "lang": "zh-CN",
+  "categories": [
+    "entertainment",
+    "lifestyle"
+  ]
+}

@@ -2,27 +2,27 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>LUNAR ARCANA · Rider–Waite–Smith</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0812">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Lunar Arcana">
+<link rel="manifest" href="./manifest.webmanifest">
+<title>LUNAR ARCANA · Tarot Card Picker</title>
 
 <script id="embedded-images" type="application/json">{}</script>
 
 <style>
 :root{
-  --bg:#080611;
-  --panel:#141020;
-  --panel2:#0d0a16;
-  --gold:#e2bf73;
-  --gold2:#f3d797;
-  --cream:#f5ecdb;
-  --text:#f7f1e9;
-  --muted:#a79caf;
-  --line:rgba(226,191,115,.28);
-  --line2:rgba(255,255,255,.07);
+  --bg:#080611;--panel:#151020;--panel2:#0d0a16;
+  --gold:#e2bf73;--gold2:#f3d797;--cream:#f5ecdb;
+  --text:#f8f2e9;--muted:#a79caf;--dim:#766d80;
+  --line:rgba(226,191,115,.28);--line2:rgba(255,255,255,.07);
   --shadow:0 24px 70px rgba(0,0,0,.48);
+  --nav-h:72px;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;background:var(--bg)}
 body{
   margin:0;min-height:100vh;color:var(--text);
   font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
@@ -32,7 +32,7 @@ body{
     linear-gradient(155deg,#06050b,#100b19 55%,#07050d);
 }
 body:before{
-  content:"";position:fixed;inset:0;pointer-events:none;opacity:.42;
+  content:"";position:fixed;inset:0;pointer-events:none;opacity:.42;z-index:-1;
   background-image:
     radial-gradient(circle at 20% 30%,#fff 0 1px,transparent 1.35px),
     radial-gradient(circle at 75% 18%,#fff 0 1px,transparent 1.35px),
@@ -40,15 +40,18 @@ body:before{
     radial-gradient(circle at 90% 63%,#e5c47b 0 1px,transparent 1.4px);
   background-size:260px 260px,330px 330px,310px 310px,420px 420px;
 }
-.shell{width:min(1240px,94vw);margin:0 auto;padding:44px 0 68px}
-.hero{text-align:center;padding:8px 0 28px}
-.moon{font-size:50px;color:var(--gold2);filter:drop-shadow(0 0 18px rgba(226,191,115,.18));margin-bottom:5px}
-.kicker{font-family:Georgia,serif;color:var(--gold2);font-size:11px;letter-spacing:.32em;text-transform:uppercase}
+button,input{font:inherit}
+button{-webkit-tap-highlight-color:transparent}
+.shell{width:min(1240px,94vw);margin:0 auto;padding:36px 0 70px}
+.desktop-hero{text-align:center;padding:4px 0 25px}
+.moon{font-size:46px;color:var(--gold2);filter:drop-shadow(0 0 18px rgba(226,191,115,.18))}
+.kicker{font-family:Georgia,serif;color:var(--gold2);font-size:10px;letter-spacing:.32em;text-transform:uppercase}
 h1{
-  margin:12px 0 10px;font-family:Georgia,"Times New Roman","Noto Serif SC",serif;
-  font-size:clamp(39px,6vw,70px);font-weight:500;letter-spacing:.04em
+  margin:10px 0 9px;font-family:Georgia,"Times New Roman","Noto Serif SC",serif;
+  font-size:clamp(38px,6vw,68px);font-weight:500;letter-spacing:.04em
 }
-.hero p{max-width:800px;margin:auto;color:var(--muted);font-size:13px;line-height:1.85}
+.desktop-hero p{max-width:800px;margin:auto;color:var(--muted);font-size:13px;line-height:1.8}
+.mobile-appbar{display:none}
 .panel{
   background:linear-gradient(180deg,rgba(26,20,41,.92),rgba(10,8,18,.95));
   border:1px solid rgba(226,191,115,.17);border-radius:30px;padding:24px;
@@ -71,6 +74,7 @@ h1{
   background:linear-gradient(135deg,#c39447,#f0d18c,#c99f55);
   box-shadow:0 8px 24px rgba(217,176,101,.17)
 }
+.btn.icon{width:42px;padding:0;display:grid;place-items:center}
 .controls{padding:28px 0 13px}
 .inputs{display:flex;justify-content:center;gap:11px;flex-wrap:wrap}
 .inputbox{position:relative}
@@ -164,39 +168,108 @@ input:focus{border-color:rgba(226,191,115,.72);box-shadow:0 0 0 4px rgba(226,191
   margin-top:21px;padding:14px 17px;border:1px solid var(--line2);border-radius:16px;
   background:rgba(0,0,0,.16);text-align:center;color:#c8bdcf;font-size:12px;line-height:1.75
 }
-details{margin-top:19px}
-summary{
-  list-style:none;cursor:pointer;text-align:center;color:#9d90a9;font-size:11px;letter-spacing:.07em
+.deck-page,.settings-page{display:none}
+.deck-page.active,.settings-page.active{display:block}
+.draw-page.active{display:block}
+.draw-page.hidden{display:none}
+.deck-head,.settings-head{
+  font:26px Georgia,"Noto Serif SC",serif;color:#f2dfb2;margin:8px 0 5px
 }
-summary::-webkit-details-marker{display:none}
-summary:before{content:"✧";margin-right:8px;color:var(--gold)}
-.deckgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-top:12px}
+.deck-sub,.settings-sub{color:var(--muted);font-size:12px;line-height:1.7;margin-bottom:18px}
+.deckgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}
 .deckitem{
   padding:8px;border:1px solid var(--line2);border-radius:9px;background:rgba(255,255,255,.02);
   color:#a99db7;font-size:10px;line-height:1.5
 }
 .deckitem b{color:#e7cb8d}
-.source-note{
-  margin-top:21px;text-align:center;color:#756b80;font-size:10px;line-height:1.7
+.setting-card{
+  border:1px solid var(--line2);border-radius:18px;padding:16px;background:rgba(255,255,255,.025);margin-bottom:12px
 }
-.status-pill{
-  display:inline-flex;align-items:center;gap:7px;margin-bottom:7px;padding:5px 10px;
-  border:1px solid var(--line2);border-radius:999px;background:rgba(255,255,255,.02)
+.setting-title{font-size:14px;color:#f0dfb8;margin-bottom:5px}
+.setting-desc{color:#8f8499;font-size:11px;line-height:1.6;margin-bottom:12px}
+.segment{display:flex;gap:8px;flex-wrap:wrap}
+.segment button.active{
+  color:#211608;border-color:transparent;background:linear-gradient(135deg,#c39447,#f0d18c,#c99f55);font-weight:700
 }
-.status-dot{width:7px;height:7px;border-radius:50%;background:#d5a95b;box-shadow:0 0 11px rgba(213,169,91,.4)}
-.status-pill.offline .status-dot{background:#82b68a;box-shadow:0 0 11px rgba(130,182,138,.42)}
-.progress{
-  position:fixed;left:50%;bottom:24px;transform:translate(-50%,22px);
+.source-note{text-align:center;color:#756b80;font-size:10px;line-height:1.7;margin-top:18px}
+.mobile-nav{display:none}
+.toast{
+  position:fixed;left:50%;bottom:24px;transform:translate(-50%,22px);opacity:0;
   background:#17111f;border:1px solid var(--line);border-radius:999px;padding:10px 15px;
-  color:#e6cc91;font-size:11px;opacity:0;pointer-events:none;transition:.25s;
-  box-shadow:0 13px 35px rgba(0,0,0,.42);z-index:99
+  color:#e6cc91;font-size:11px;pointer-events:none;transition:.25s;
+  box-shadow:0 13px 35px rgba(0,0,0,.42);z-index:99;white-space:nowrap
 }
-.progress.show{opacity:1;transform:translate(-50%,0)}
-@media(max-width:950px){.flip{height:540px}.spread{gap:12px}}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media(max-width:950px){
+  .flip{height:540px}.spread{gap:12px}
+}
+
+/* -------- Mobile mini-app layout -------- */
 @media(max-width:720px){
-  .shell{width:min(95vw,620px);padding-top:25px}
-  .panel{padding:16px}.spread{grid-template-columns:1fr;gap:27px}
-  .flip{height:650px}.deckgrid{grid-template-columns:repeat(3,1fr)}
+  body{background:#0a0710;padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom))}
+  .shell{width:100%;padding:0}
+  .desktop-hero{display:none}
+  .mobile-appbar{
+    display:flex;position:sticky;top:0;z-index:30;height:64px;
+    align-items:center;justify-content:space-between;padding:
+      calc(8px + env(safe-area-inset-top)) 16px 8px;
+    background:rgba(9,7,15,.88);backdrop-filter:blur(18px);
+    border-bottom:1px solid rgba(255,255,255,.055)
+  }
+  .app-title{display:flex;align-items:center;gap:9px}
+  .app-logo{
+    width:34px;height:34px;border-radius:11px;display:grid;place-items:center;
+    background:linear-gradient(145deg,#241732,#100b19);border:1px solid var(--line);
+    color:var(--gold2);font-family:Georgia,serif;font-size:21px
+  }
+  .app-name{font:16px Georgia,"Noto Serif SC",serif;color:#f5e5bf}
+  .app-name small{display:block;color:#776d82;font:8px Inter,sans-serif;letter-spacing:.16em;margin-top:2px}
+  .panel{
+    background:transparent;border:0;border-radius:0;padding:14px 14px 8px;box-shadow:none
+  }
+  .topbar{
+    border-radius:18px;padding:13px;background:linear-gradient(145deg,rgba(34,25,48,.82),rgba(15,11,24,.84));
+    border-color:rgba(226,191,115,.16)
+  }
+  .round{font-size:13px}
+  .round small{font-size:10px}
+  .top-actions .desktop-only{display:none}
+  .controls{padding:21px 0 10px}
+  .inputs{gap:8px;flex-wrap:nowrap}
+  .inputbox{flex:1;min-width:0}
+  input{width:100%;height:52px;font-size:18px;border-radius:15px}
+  .actions{display:grid;grid-template-columns:1.35fr 1fr;gap:9px}
+  .actions .btn{width:100%;padding-inline:8px}
+  .section-title{margin:24px 0 14px;font-size:9px}
+  .spread{grid-template-columns:1fr;gap:24px}
+  .slot{max-width:440px;width:100%;margin:0 auto}
+  .flip{height:min(68vh,620px);min-height:500px}
+  .face{border-radius:25px}
+  .meta{border-radius:18px;min-height:auto;padding:14px}
+  .meta .cn{font-size:21px}
+  .result{margin-bottom:8px}
+  .deckgrid{grid-template-columns:repeat(3,1fr);gap:8px}
+  .deckitem{font-size:10px;padding:9px}
+  .source-note{padding:0 16px 12px}
+  .mobile-nav{
+    display:grid;grid-template-columns:repeat(3,1fr);position:fixed;
+    left:0;right:0;bottom:0;z-index:40;height:calc(var(--nav-h) + env(safe-area-inset-bottom));
+    padding:7px 12px env(safe-area-inset-bottom);
+    background:rgba(10,7,16,.92);backdrop-filter:blur(20px);
+    border-top:1px solid rgba(255,255,255,.065)
+  }
+  .nav-btn{
+    border:0;background:transparent;color:#776e82;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:3px;font-size:9px;cursor:pointer
+  }
+  .nav-btn .ico{font-size:21px;line-height:1}
+  .nav-btn.active{color:var(--gold2)}
+  .settings-page,.deck-page{padding-bottom:8px}
+  .toast{bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 12px);max-width:88vw;overflow:hidden;text-overflow:ellipsis}
+}
+@media(display-mode:standalone){
+  .mobile-appbar{padding-top:calc(8px + env(safe-area-inset-top))}
 }
 @media(prefers-reduced-motion:reduce){.flip-inner{transition-duration:.01ms}}
 </style>
@@ -204,89 +277,204 @@ summary:before{content:"✧";margin-right:8px;color:var(--gold)}
 
 <body>
 <div class="shell">
-  <header class="hero">
+  <header class="desktop-hero">
     <div class="moon">☾</div>
     <div class="kicker">Lunar Arcana · Rider–Waite–Smith</div>
-    <h1>三张塔罗</h1>
-    <p>使用 Rider–Waite–Smith 原版牌面。每次刷新或重新洗牌时，完整 78 张牌都会重新随机排列；
-      你输入的三个数字只代表<strong>这一轮牌堆的位置</strong>。</p>
+    <h1 data-i18n="title">三张塔罗</h1>
+    <p data-i18n="heroText">使用 Rider–Waite–Smith 原版牌面。每次刷新或重新洗牌时，完整 78 张牌都会重新随机排列；你输入的三个数字只代表这一轮牌堆的位置。</p>
+  </header>
+
+  <header class="mobile-appbar">
+    <div class="app-title">
+      <div class="app-logo">☾</div>
+      <div class="app-name">Lunar Arcana<small>TAROT PICKER</small></div>
+    </div>
+    <button class="btn icon" id="langQuick" aria-label="Language">文</button>
   </header>
 
   <main class="panel">
-    <div class="topbar">
-      <div class="round">
-        本轮牌序 · <span id="shuffleId">——</span>
-        <small>重新洗牌后，数字对应关系与正逆位都会变化。</small>
+    <section id="drawPage" class="draw-page active">
+      <div class="topbar">
+        <div class="round">
+          <span data-i18n="roundLabel">本轮牌序</span> · <span id="shuffleId">——</span>
+          <small data-i18n="roundHint">重新洗牌后，数字对应关系与正逆位都会变化。</small>
+        </div>
+        <div class="top-actions">
+          <button class="btn desktop-only" id="offlineBtn" data-i18n="offlineBtn">⇩ 生成完全离线版</button>
+          <button class="btn" id="reshuffleBtn" data-i18n="reshuffleBtn">↻ 重新洗牌</button>
+        </div>
       </div>
-      <div class="top-actions">
-        <button class="btn" id="offlineBtn">⇩ 生成完全离线版</button>
-        <button class="btn" id="reshuffleBtn">↻ 重新洗牌</button>
-      </div>
-    </div>
 
-    <section class="controls">
-      <div class="inputs">
-        <div class="inputbox"><label>FIRST</label><input id="n1" type="number" min="1" max="78" placeholder="1–78"></div>
-        <div class="inputbox"><label>SECOND</label><input id="n2" type="number" min="1" max="78" placeholder="1–78"></div>
-        <div class="inputbox"><label>THIRD</label><input id="n3" type="number" min="1" max="78" placeholder="1–78"></div>
-      </div>
-      <div class="tip">抽牌前牌面不会显示。点击翻牌后，三张牌会依次揭示。</div>
-      <div class="actions">
-        <button class="btn primary" id="drawBtn">翻开这三张牌</button>
-        <button class="btn" id="randomBtn">随机三个数字</button>
-      </div>
+      <section class="controls">
+        <div class="inputs">
+          <div class="inputbox"><label data-i18n="first">FIRST</label><input id="n1" type="number" min="1" max="78" placeholder="1–78"></div>
+          <div class="inputbox"><label data-i18n="second">SECOND</label><input id="n2" type="number" min="1" max="78" placeholder="1–78"></div>
+          <div class="inputbox"><label data-i18n="third">THIRD</label><input id="n3" type="number" min="1" max="78" placeholder="1–78"></div>
+        </div>
+        <div class="tip" data-i18n="tip">抽牌前牌面不会显示。点击翻牌后，三张牌会依次揭示。</div>
+        <div class="actions">
+          <button class="btn primary" id="drawBtn" data-i18n="drawBtn">翻开这三张牌</button>
+          <button class="btn" id="randomBtn" data-i18n="randomBtn">随机三个数字</button>
+        </div>
+      </section>
+
+      <div class="section-title" data-i18n="spreadTitle">THE THREE CARD SPREAD</div>
+      <section id="spread" class="spread"></section>
+      <div id="result" class="result" data-i18n="initialResult">牌已洗好。请输入三个数字。</div>
     </section>
 
-    <div class="section-title">THE THREE CARD SPREAD</div>
-    <section id="spread" class="spread"></section>
-
-    <div id="result" class="result">牌已洗好。请输入三个数字。</div>
-
-    <details>
-      <summary>查看本轮 1–78 完整对应表</summary>
+    <section id="deckPage" class="deck-page">
+      <div class="deck-head" data-i18n="deckTitle">本轮牌堆</div>
+      <div class="deck-sub" data-i18n="deckSub">这里显示本轮 1–78 的完整随机对应关系。重新洗牌后会全部改变。</div>
       <div id="deckGrid" class="deckgrid"></div>
-    </details>
+    </section>
+
+    <section id="settingsPage" class="settings-page">
+      <div class="settings-head" data-i18n="settingsTitle">设置</div>
+      <div class="settings-sub" data-i18n="settingsSub">语言、安装和离线功能都放在这里。</div>
+
+      <div class="setting-card">
+        <div class="setting-title" data-i18n="languageTitle">语言</div>
+        <div class="setting-desc" data-i18n="languageDesc">切换界面语言。你的选择会保存在这台设备上。</div>
+        <div class="segment">
+          <button class="btn lang-choice" data-lang="zh">中文</button>
+          <button class="btn lang-choice" data-lang="en">English</button>
+        </div>
+      </div>
+
+      <div class="setting-card">
+        <div class="setting-title" data-i18n="installTitle">添加到手机主屏幕</div>
+        <div class="setting-desc" data-i18n="installDesc">部署到 GitHub Pages 后，可以像 App 一样从手机主屏幕打开。</div>
+        <button class="btn primary" id="installBtn" data-i18n="installBtn">安装 / 添加到主屏幕</button>
+      </div>
+
+      <div class="setting-card">
+        <div class="setting-title" data-i18n="offlineTitle">完全离线版</div>
+        <div class="setting-desc" data-i18n="offlineDesc">下载一个把 78 张牌面全部嵌入其中的独立 HTML 文件。</div>
+        <button class="btn" id="offlineBtnMobile" data-i18n="offlineBtn">⇩ 生成完全离线版</button>
+      </div>
+
+      <div class="setting-card">
+        <div class="setting-title" data-i18n="aboutTitle">关于</div>
+        <div class="setting-desc" data-i18n="aboutDesc">Rider–Waite–Smith · Pamela Colman Smith · 1909。此项目为个人前端学习项目。</div>
+      </div>
+    </section>
   </main>
 
-  <div class="source-note">
-    <div id="sourceStatus" class="status-pill"><span class="status-dot"></span><span>原版牌面在线载入 · 可一键生成完全离线版</span></div><br>
-    Rider–Waite–Smith · Pamela Colman Smith · 1909
-  </div>
+  <div class="source-note">Rider–Waite–Smith · Pamela Colman Smith · 1909</div>
 </div>
 
-<div id="progress" class="progress"></div>
+<nav class="mobile-nav">
+  <button class="nav-btn active" data-page="draw"><span class="ico">☾</span><span data-i18n="navDraw">抽牌</span></button>
+  <button class="nav-btn" data-page="deck"><span class="ico">✦</span><span data-i18n="navDeck">牌堆</span></button>
+  <button class="nav-btn" data-page="settings"><span class="ico">⚙</span><span data-i18n="navSettings">设置</span></button>
+</nav>
+
+<div id="toast" class="toast"></div>
 
 <script>
-const EMBEDDED_IMAGES=JSON.parse(document.getElementById("embedded-images").textContent||"{}");
+const I18N={
+ zh:{
+  title:"三张塔罗",
+  heroText:"使用 Rider–Waite–Smith 原版牌面。每次刷新或重新洗牌时，完整 78 张牌都会重新随机排列；你输入的三个数字只代表这一轮牌堆的位置。",
+  roundLabel:"本轮牌序",roundHint:"重新洗牌后，数字对应关系与正逆位都会变化。",
+  offlineBtn:"⇩ 生成完全离线版",reshuffleBtn:"↻ 重新洗牌",
+  first:"FIRST",second:"SECOND",third:"THIRD",
+  tip:"抽牌前牌面不会显示。点击翻牌后，三张牌会依次揭示。",
+  drawBtn:"翻开这三张牌",randomBtn:"随机三个数字",spreadTitle:"THE THREE CARD SPREAD",
+  initialResult:"牌已洗好。请输入三个数字。",
+  deckTitle:"本轮牌堆",deckSub:"这里显示本轮 1–78 的完整随机对应关系。重新洗牌后会全部改变。",
+  settingsTitle:"设置",settingsSub:"语言、安装和离线功能都放在这里。",
+  languageTitle:"语言",languageDesc:"切换界面语言。你的选择会保存在这台设备上。",
+  installTitle:"添加到手机主屏幕",installDesc:"部署到 GitHub Pages 后，可以像 App 一样从手机主屏幕打开。",
+  installBtn:"安装 / 添加到主屏幕",
+  offlineTitle:"完全离线版",offlineDesc:"下载一个把 78 张牌面全部嵌入其中的独立 HTML 文件。",
+  aboutTitle:"关于",aboutDesc:"Rider–Waite–Smith · Pamela Colman Smith · 1909。此项目为个人前端学习项目。",
+  navDraw:"抽牌",navDeck:"牌堆",navSettings:"设置",
+  hidden:"尚未揭示",hiddenSub:"这张牌仍然隐藏。",hiddenHelp:"输入三个数字后再翻牌。",
+  card:"第",position:"位置",upright:"正位",reversed:"逆位",
+  invalid:"请输入三个 1–78 之间的整数",reshuffled:"牌已经重新洗好。",
+  installIOS:"iPhone / iPad：请用 Safari 打开 → 分享 → 添加到主屏幕。",
+  installUnavailable:"请先把网页部署到 GitHub Pages，再从手机浏览器添加到主屏幕。",
+  alreadyInstalled:"当前已经以 App 模式打开。",
+  offlineStart:"正在准备离线版",offlineDone:"完成：离线版已生成",offlineFail:"生成失败，请检查网络后重试",
+  loading:"正在载入 Rider–Waite–Smith 原版牌面…",
+  imageFail:"牌面暂时载入失败，请检查网络。",
+  meaningPrefix:"关键词：",revPrefix:"阻滞、内化、延迟；"
+ },
+ en:{
+  title:"Three-Card Tarot",
+  heroText:"Using the original Rider–Waite–Smith artwork. The full 78-card deck is reshuffled whenever you refresh or reshuffle; your three numbers represent positions in the current deck.",
+  roundLabel:"Current shuffle",roundHint:"Reshuffling changes the number mapping and upright/reversed orientations.",
+  offlineBtn:"⇩ Generate offline version",reshuffleBtn:"↻ Reshuffle",
+  first:"FIRST",second:"SECOND",third:"THIRD",
+  tip:"Cards stay hidden until you reveal them. The three cards flip over one by one.",
+  drawBtn:"Reveal three cards",randomBtn:"Random three numbers",spreadTitle:"THE THREE CARD SPREAD",
+  initialResult:"The deck is ready. Enter three numbers.",
+  deckTitle:"Current Deck",deckSub:"This shows the complete 1–78 mapping for the current shuffle. It changes after every reshuffle.",
+  settingsTitle:"Settings",settingsSub:"Language, installation and offline options.",
+  languageTitle:"Language",languageDesc:"Switch the interface language. Your choice is saved on this device.",
+  installTitle:"Add to Home Screen",installDesc:"After deployment on GitHub Pages, you can launch it from your phone like an app.",
+  installBtn:"Install / Add to Home Screen",
+  offlineTitle:"Fully Offline Version",offlineDesc:"Download a standalone HTML file with all 78 card images embedded.",
+  aboutTitle:"About",aboutDesc:"Rider–Waite–Smith · Pamela Colman Smith · 1909. A personal front-end learning project.",
+  navDraw:"Draw",navDeck:"Deck",navSettings:"Settings",
+  hidden:"Hidden",hiddenSub:"This card remains hidden.",hiddenHelp:"Enter three numbers and reveal the cards.",
+  card:"CARD",position:"POSITION",upright:"Upright",reversed:"Reversed",
+  invalid:"Enter three integers between 1 and 78.",reshuffled:"The deck has been reshuffled.",
+  installIOS:"iPhone / iPad: open in Safari → Share → Add to Home Screen.",
+  installUnavailable:"Deploy the site to GitHub Pages first, then add it from your mobile browser.",
+  alreadyInstalled:"The app is already running in standalone mode.",
+  offlineStart:"Preparing offline version",offlineDone:"Done: offline version generated",offlineFail:"Could not generate the offline version. Check your connection and try again.",
+  loading:"Loading original Rider–Waite–Smith artwork…",
+  imageFail:"Card artwork could not be loaded. Check your connection.",
+  meaningPrefix:"Keywords: ",revPrefix:"Blocked, internalised, delayed; "
+ }
+};
 
+let lang=localStorage.getItem("tarot-language")||"zh";
+function t(k){return I18N[lang][k]||k}
+function applyLanguage(next){
+  lang=next;
+  localStorage.setItem("tarot-language",lang);
+  document.documentElement.lang=lang==="zh"?"zh-CN":"en";
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    const key=el.dataset.i18n;if(I18N[lang][key])el.textContent=I18N[lang][key];
+  });
+  document.querySelectorAll(".lang-choice").forEach(b=>b.classList.toggle("active",b.dataset.lang===lang));
+  document.getElementById("langQuick").textContent=lang==="zh"?"EN":"中";
+  renderDeckGrid();
+  if(currentCards) renderCurrentReading(false);
+}
+
+const EMBEDDED_IMAGES=JSON.parse(document.getElementById("embedded-images").textContent||"{}");
 const PRIMARY_BASE="https://raw.githubusercontent.com/seven102161/elaine-tarot-cards/main/cards/";
 const FALLBACK_BASE="https://petaloverflow.github.io/tarot-api/cards/";
 
 const majors=[
-["ar00","愚者","The Fool","开始、自由、冒险"],
-["ar01","魔术师","The Magician","行动、创造、资源"],
-["ar02","女祭司","The High Priestess","直觉、潜意识、静观"],
-["ar03","皇后","The Empress","丰盛、滋养、创造力"],
-["ar04","皇帝","The Emperor","秩序、责任、掌控"],
-["ar05","教皇","The Hierophant","传统、学习、信念"],
-["ar06","恋人","The Lovers","关系、选择、价值观"],
-["ar07","战车","The Chariot","意志、推进、胜利"],
-["ar08","力量","Strength","勇气、自控、内在力量"],
-["ar09","隐者","The Hermit","独处、寻找、内省"],
-["ar10","命运之轮","Wheel of Fortune","变化、周期、机会"],
-["ar11","正义","Justice","公平、因果、判断"],
-["ar12","倒吊人","The Hanged Man","暂停、换位、放下"],
-["ar13","死神","Death","结束、转化、重生"],
-["ar14","节制","Temperance","平衡、整合、耐心"],
-["ar15","恶魔","The Devil","束缚、欲望、执念"],
-["ar16","高塔","The Tower","突变、冲击、真相"],
-["ar17","星星","The Star","希望、疗愈、指引"],
-["ar18","月亮","The Moon","不安、想象、未知"],
-["ar19","太阳","The Sun","喜悦、清晰、成功"],
-["ar20","审判","Judgement","觉醒、召唤、复盘"],
-["ar21","世界","The World","完成、圆满、整合"]
+["ar00","愚者","The Fool","开始、自由、冒险","Beginnings, freedom, adventure"],
+["ar01","魔术师","The Magician","行动、创造、资源","Action, creation, resourcefulness"],
+["ar02","女祭司","The High Priestess","直觉、潜意识、静观","Intuition, mystery, inner knowing"],
+["ar03","皇后","The Empress","丰盛、滋养、创造力","Abundance, nurture, creativity"],
+["ar04","皇帝","The Emperor","秩序、责任、掌控","Order, responsibility, authority"],
+["ar05","教皇","The Hierophant","传统、学习、信念","Tradition, learning, beliefs"],
+["ar06","恋人","The Lovers","关系、选择、价值观","Relationships, choices, values"],
+["ar07","战车","The Chariot","意志、推进、胜利","Willpower, progress, victory"],
+["ar08","力量","Strength","勇气、自控、内在力量","Courage, restraint, inner strength"],
+["ar09","隐者","The Hermit","独处、寻找、内省","Solitude, searching, reflection"],
+["ar10","命运之轮","Wheel of Fortune","变化、周期、机会","Change, cycles, opportunity"],
+["ar11","正义","Justice","公平、因果、判断","Fairness, cause and effect, judgement"],
+["ar12","倒吊人","The Hanged Man","暂停、换位、放下","Pause, perspective, surrender"],
+["ar13","死神","Death","结束、转化、重生","Endings, transformation, renewal"],
+["ar14","节制","Temperance","平衡、整合、耐心","Balance, integration, patience"],
+["ar15","恶魔","The Devil","束缚、欲望、执念","Attachment, desire, fixation"],
+["ar16","高塔","The Tower","突变、冲击、真相","Upheaval, shock, truth"],
+["ar17","星星","The Star","希望、疗愈、指引","Hope, healing, guidance"],
+["ar18","月亮","The Moon","不安、想象、未知","Uncertainty, imagination, the unknown"],
+["ar19","太阳","The Sun","喜悦、清晰、成功","Joy, clarity, success"],
+["ar20","审判","Judgement","觉醒、召唤、复盘","Awakening, calling, reflection"],
+["ar21","世界","The World","完成、圆满、整合","Completion, wholeness, integration"]
 ];
-
 const ranks=[
 ["ac","王牌","Ace"],["02","二","Two"],["03","三","Three"],["04","四","Four"],
 ["05","五","Five"],["06","六","Six"],["07","七","Seven"],["08","八","Eight"],
@@ -294,27 +482,34 @@ const ranks=[
 ["qu","皇后","Queen"],["ki","国王","King"]
 ];
 const suits=[
-["wa","权杖","Wands","行动、热情、事业"],
-["cu","圣杯","Cups","感情、关系、直觉"],
-["sw","宝剑","Swords","思考、冲突、决定"],
-["pe","星币","Pentacles","金钱、现实、稳定"]
+["wa","权杖","Wands","行动、热情、事业","Action, passion, work"],
+["cu","圣杯","Cups","感情、关系、直觉","Emotion, relationships, intuition"],
+["sw","宝剑","Swords","思考、冲突、决定","Thought, conflict, decisions"],
+["pe","星币","Pentacles","金钱、现实、稳定","Money, material life, stability"]
 ];
-const nuance=[
+const nuancesZh=[
 "新机会、种子、开始","选择、平衡、互动","发展、合作、扩张","稳定、边界、守成",
 "挑战、摩擦、考验","恢复、调整、推进","评估、耐心、策略","行动、速度、突破",
 "积累、独立、成熟","结果、完成、责任","消息、学习、好奇","追求、冲劲、执行",
 "成熟、照顾、内在掌控","领导、稳定、外在掌控"
 ];
+const nuancesEn=[
+"New opportunity, seed, beginning","Choice, balance, interaction","Growth, cooperation, expansion","Stability, boundaries, preservation",
+"Challenge, friction, test","Recovery, adjustment, progress","Assessment, patience, strategy","Action, speed, breakthrough",
+"Accumulation, independence, maturity","Outcome, completion, responsibility","News, learning, curiosity","Pursuit, drive, execution",
+"Maturity, care, inner command","Leadership, stability, outer command"
+];
 
-const deck=majors.map((m,i)=>({id:i+1,code:m[0],cn:m[1],en:m[2],meaning:m[3]}));
+const deck=majors.map((m,i)=>({id:i+1,code:m[0],cn:m[1],en:m[2],meaningZh:m[3],meaningEn:m[4]}));
 let id=23;
 for(const s of suits){
   ranks.forEach((r,i)=>deck.push({
-    id:id++,code:s[0]+r[0],cn:s[1]+r[1],en:`${r[2]} of ${s[2]}`,meaning:`${s[3]}；${nuance[i]}`
+    id:id++,code:s[0]+r[0],cn:s[1]+r[1],en:`${r[2]} of ${s[2]}`,
+    meaningZh:`${s[3]}；${nuancesZh[i]}`,meaningEn:`${s[4]}; ${nuancesEn[i]}`
   }));
 }
 
-let shuffled=[];
+let shuffled=[],currentCards=null,currentNums=null;
 
 function randomInt(max){
   if(window.crypto?.getRandomValues){
@@ -328,64 +523,63 @@ function shuffle(arr){
   for(let i=a.length-1;i>0;i--){const j=randomInt(i+1);[a[i],a[j]]=[a[j],a[i]]}
   return a;
 }
-function shuffleId(){
+function token(){
   const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let s="";
   for(let i=0;i<6;i++)s+=chars[randomInt(chars.length)];
   return s;
 }
-function sourceFor(code){
-  return EMBEDDED_IMAGES[code] || PRIMARY_BASE+code+".jpg";
-}
-function fallbackFor(code){
-  return FALLBACK_BASE+code+".jpg";
-}
+function sourceFor(code){return EMBEDDED_IMAGES[code]||PRIMARY_BASE+code+".jpg"}
+function fallbackFor(code){return FALLBACK_BASE+code+".jpg"}
 function imgError(img){
-  if(EMBEDDED_IMAGES[img.dataset.code]){
-    img.style.display="none";
-    img.nextElementSibling.textContent="内置牌面读取失败";
-    return;
-  }
   if(!img.dataset.usedFallback){
-    img.dataset.usedFallback="1";
-    img.src=img.dataset.fallback;
+    img.dataset.usedFallback="1";img.src=img.dataset.fallback;
   }else{
-    img.style.display="none";
-    img.nextElementSibling.textContent="原版牌面暂时载入失败。请检查网络，或稍后重试。";
+    img.style.display="none";img.nextElementSibling.textContent=t("imageFail");
   }
 }
+function orientationText(card){return card.orientation==="up"?t("upright"):t("reversed")}
+function cardDisplayName(card){return lang==="zh"?card.cn:card.en}
+function cardSubName(card){return lang==="zh"?card.en:card.cn}
+function cardMeaning(card){return lang==="zh"?card.meaningZh:card.meaningEn}
+
 function emptySlot(i){
-  return `<article>
-    <div class="slot-head"><span>CARD ${String(i+1).padStart(2,"0")}</span><span class="pos">POSITION —</span></div>
+  return `<article class="slot">
+    <div class="slot-head"><span>${t("card")} ${String(i+1).padStart(2,"0")}</span><span class="pos">${t("position")} —</span></div>
     <div class="flip">
       <div class="flip-inner">
         <div class="face back"><div class="backmark"><div class="crescent">☾</div><div class="word">LUNAR ARCANA</div></div></div>
-        <div class="face front"><div class="image-shell"><div style="color:#776b83;font:12px Georgia,serif">等待翻牌</div></div></div>
+        <div class="face front"><div class="image-shell"><div style="color:#776b83;font:12px Georgia,serif">${t("hidden")}</div></div></div>
       </div>
     </div>
-    <div class="meta"><div class="cn">尚未揭示</div><div class="en">The card remains hidden.</div><div class="keys">输入三个数字后再翻牌。</div></div>
+    <div class="meta"><div class="cn">${t("hidden")}</div><div class="en">${t("hiddenSub")}</div><div class="keys">${t("hiddenHelp")}</div></div>
   </article>`;
 }
 function renderEmpty(){
+  currentCards=null;currentNums=null;
   document.getElementById("spread").innerHTML=[0,1,2].map(emptySlot).join("");
 }
-function renderGrid(){
-  document.getElementById("deckGrid").innerHTML=shuffled.map((c,i)=>
-    `<div class="deckitem"><b>${i+1}</b> · ${c.cn}<br>${c.orientation}</div>`).join("");
+function renderDeckGrid(){
+  const grid=document.getElementById("deckGrid");
+  if(!grid)return;
+  grid.innerHTML=shuffled.map((c,i)=>
+    `<div class="deckitem"><b>${i+1}</b> · ${cardDisplayName(c)}<br>${orientationText(c)}</div>`).join("");
 }
 function reshuffle(){
-  shuffled=shuffle(deck).map(c=>({...c,orientation:randomInt(2)===0?"正位":"逆位"}));
-  document.getElementById("shuffleId").textContent=shuffleId();
-  renderEmpty();renderGrid();
-  document.getElementById("result").textContent="牌已经重新洗好。数字对应关系与正逆位均已改变。";
+  shuffled=shuffle(deck).map(c=>({...c,orientation:randomInt(2)===0?"up":"rev"}));
+  document.getElementById("shuffleId").textContent=token();
+  renderEmpty();renderDeckGrid();
+  document.getElementById("result").textContent=t("reshuffled");
+  toast(t("reshuffled"));
 }
 function values(){
   const v=["n1","n2","n3"].map(x=>Number(document.getElementById(x).value));
   return v.some(n=>!Number.isInteger(n)||n<1||n>78)?null:v;
 }
 function slot(card,pos,i){
-  const reversed=card.orientation==="逆位"?" reversed":"";
-  return `<article>
-    <div class="slot-head"><span>CARD ${String(i+1).padStart(2,"0")}</span><span class="pos">POSITION ${String(pos).padStart(2,"0")}</span></div>
+  const reversed=card.orientation==="rev"?" reversed":"";
+  const prefix=card.orientation==="rev"?t("revPrefix"):"";
+  return `<article class="slot">
+    <div class="slot-head"><span>${t("card")} ${String(i+1).padStart(2,"0")}</span><span class="pos">${t("position")} ${String(pos).padStart(2,"0")}</span></div>
     <div class="flip" data-index="${i}">
       <div class="flip-inner">
         <div class="face back"><div class="backmark"><div class="crescent">☾</div><div class="word">LUNAR ARCANA</div></div></div>
@@ -393,35 +587,40 @@ function slot(card,pos,i){
           <div class="image-shell">
             <img class="card-img${reversed}"
               src="${sourceFor(card.code)}"
-              data-code="${card.code}"
               data-fallback="${fallbackFor(card.code)}"
               alt="${card.cn} / ${card.en}"
               onerror="imgError(this)">
-            <div class="image-loading">正在载入 Rider–Waite–Smith 原版牌面…</div>
+            <div class="image-loading">${t("loading")}</div>
           </div>
         </div>
       </div>
     </div>
     <div class="meta">
-      <div class="cn">${card.cn}</div>
-      <div class="en">${card.en}</div>
-      <div class="keys">关键词：${card.orientation==="逆位"?"阻滞、内化、延迟；":""}${card.meaning}</div>
-      <div class="badge">${card.orientation}</div>
+      <div class="cn">${cardDisplayName(card)}</div>
+      <div class="en">${cardSubName(card)}</div>
+      <div class="keys">${t("meaningPrefix")}${prefix}${cardMeaning(card)}</div>
+      <div class="badge">${orientationText(card)}</div>
     </div>
   </article>`;
 }
-function reveal(){
-  const nums=values();
-  if(!nums){showProgress("请输入三个 1–78 之间的整数",1500);return}
-  const cards=nums.map(n=>shuffled[n-1]);
-  document.getElementById("spread").innerHTML=cards.map((c,i)=>slot(c,nums[i],i)).join("");
+function renderCurrentReading(animate=true){
+  if(!currentCards||!currentNums){renderEmpty();return}
+  document.getElementById("spread").innerHTML=currentCards.map((c,i)=>slot(c,currentNums[i],i)).join("");
   const flips=[...document.querySelectorAll(".flip")];
   flips.forEach((el,i)=>{
     el.addEventListener("click",()=>el.classList.toggle("revealed"));
-    setTimeout(()=>el.classList.add("revealed"),320+i*430);
+    if(animate)setTimeout(()=>el.classList.add("revealed"),320+i*430);
+    else el.classList.add("revealed");
   });
-  document.getElementById("result").innerHTML=
-    nums.map((n,i)=>`${n} → <strong style="color:#e7cb8d">${cards[i].cn}</strong>（${cards[i].orientation}）`).join("　✦　");
+  document.getElementById("result").innerHTML=currentNums.map((n,i)=>
+    `${n} → <strong style="color:#e7cb8d">${cardDisplayName(currentCards[i])}</strong> (${orientationText(currentCards[i])})`
+  ).join("　✦　");
+}
+function reveal(){
+  const nums=values();
+  if(!nums){toast(t("invalid"));return}
+  currentNums=nums;currentCards=nums.map(n=>shuffled[n-1]);
+  renderCurrentReading(true);
 }
 function randomThree(){
   const a=[];
@@ -430,15 +629,39 @@ function randomThree(){
   reveal();
 }
 
-let progressTimer;
-function showProgress(msg,hideAfter=0){
-  const el=document.getElementById("progress");
+let toastTimer;
+function toast(msg){
+  const el=document.getElementById("toast");
   el.textContent=msg;el.classList.add("show");
-  clearTimeout(progressTimer);
-  if(hideAfter)progressTimer=setTimeout(()=>el.classList.remove("show"),hideAfter);
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("show"),1900);
 }
-function hideProgress(){document.getElementById("progress").classList.remove("show")}
 
+/* Mobile navigation */
+function showPage(page){
+  document.getElementById("drawPage").classList.toggle("hidden",page!=="draw");
+  document.getElementById("deckPage").classList.toggle("active",page==="deck");
+  document.getElementById("settingsPage").classList.toggle("active",page==="settings");
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll(".nav-btn").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
+
+/* Installable PWA */
+let deferredInstall=null;
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e});
+async function installApp(){
+  if(window.matchMedia("(display-mode: standalone)").matches){toast(t("alreadyInstalled"));return}
+  if(deferredInstall){
+    deferredInstall.prompt();
+    await deferredInstall.userChoice;
+    deferredInstall=null;
+    return;
+  }
+  const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  toast(isIOS?t("installIOS"):t("installUnavailable"));
+}
+
+/* Offline export */
 function blobToDataURL(blob){
   return new Promise((resolve,reject)=>{
     const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(blob);
@@ -447,71 +670,57 @@ function blobToDataURL(blob){
 async function fetchImageData(card){
   if(EMBEDDED_IMAGES[card.code])return EMBEDDED_IMAGES[card.code];
   const urls=[PRIMARY_BASE+card.code+".jpg",FALLBACK_BASE+card.code+".jpg"];
-  let lastErr;
+  let err;
   for(const url of urls){
     try{
       const res=await fetch(url,{mode:"cors",cache:"force-cache"});
       if(!res.ok)throw new Error("HTTP "+res.status);
       return await blobToDataURL(await res.blob());
-    }catch(e){lastErr=e}
+    }catch(e){err=e}
   }
-  throw lastErr||new Error("download failed");
+  throw err||new Error("download failed");
 }
 async function exportOffline(){
-  if(Object.keys(EMBEDDED_IMAGES).length===78){
-    showProgress("当前文件已经是完全离线版",1700);
-    return;
-  }
-  const button=document.getElementById("offlineBtn");
-  button.disabled=true;
+  if(Object.keys(EMBEDDED_IMAGES).length===78){toast(t("offlineDone"));return}
+  toast(t("offlineStart")+"…");
   const map={...EMBEDDED_IMAGES};
   try{
-    let done=Object.keys(map).length;
-    const queue=deck.filter(c=>!map[c.code]);
-    let cursor=0;
+    const queue=deck.filter(c=>!map[c.code]);let cursor=0,done=Object.keys(map).length;
     async function worker(){
       while(cursor<queue.length){
         const card=queue[cursor++];
-        showProgress(`正在嵌入原版牌面 ${done+1}/78 · ${card.cn}`);
-        map[card.code]=await fetchImageData(card);
-        done++;
+        map[card.code]=await fetchImageData(card);done++;
+        if(done%8===0)toast(`${t("offlineStart")} ${done}/78`);
       }
     }
     await Promise.all(Array.from({length:5},worker));
     const dataScript=document.getElementById("embedded-images");
-    const old=dataScript.textContent;
-    dataScript.textContent=JSON.stringify(map);
+    const old=dataScript.textContent;dataScript.textContent=JSON.stringify(map);
     const html="<!doctype html>\n"+document.documentElement.outerHTML;
     dataScript.textContent=old;
-
     const blob=new Blob([html],{type:"text/html;charset=utf-8"});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement("a");
-    a.href=url;
-    a.download="lunar_arcana_RWS_OFFLINE.html";
-    document.body.appendChild(a);a.click();a.remove();
-    setTimeout(()=>URL.revokeObjectURL(url),3000);
-    showProgress("完成：真正离线版已生成",2400);
-  }catch(e){
-    console.error(e);
-    showProgress("离线版生成失败：图片源暂时无法下载，请稍后重试",2600);
-  }finally{
-    button.disabled=false;
-  }
+    const url=URL.createObjectURL(blob),a=document.createElement("a");
+    a.href=url;a.download="lunar_arcana_RWS_OFFLINE.html";document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),3000);toast(t("offlineDone"));
+  }catch(e){console.error(e);toast(t("offlineFail"))}
 }
 
+/* Events */
 document.getElementById("drawBtn").addEventListener("click",reveal);
 document.getElementById("randomBtn").addEventListener("click",randomThree);
 document.getElementById("reshuffleBtn").addEventListener("click",reshuffle);
 document.getElementById("offlineBtn").addEventListener("click",exportOffline);
+document.getElementById("offlineBtnMobile").addEventListener("click",exportOffline);
+document.getElementById("installBtn").addEventListener("click",installApp);
+document.getElementById("langQuick").addEventListener("click",()=>applyLanguage(lang==="zh"?"en":"zh"));
+document.querySelectorAll(".lang-choice").forEach(b=>b.addEventListener("click",()=>applyLanguage(b.dataset.lang)));
 ["n1","n2","n3"].forEach(id=>document.getElementById(id).addEventListener("keydown",e=>{if(e.key==="Enter")reveal()}));
 
-if(Object.keys(EMBEDDED_IMAGES).length===78){
-  const p=document.getElementById("sourceStatus");
-  p.classList.add("offline");
-  p.innerHTML='<span class="status-dot"></span><span>78 张 Rider–Waite–Smith 原版牌面已内置 · 完全离线</span>';
-  document.getElementById("offlineBtn").textContent="✓ 已是完全离线版";
+if("serviceWorker" in navigator && location.protocol.startsWith("http")){
+  window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 }
+
+applyLanguage(lang);
 reshuffle();
 </script>
 </body>
