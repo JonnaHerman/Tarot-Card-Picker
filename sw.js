@@ -1,4 +1,4 @@
-const CACHE_NAME="lunar-arcana-v2";
+const CACHE_NAME="lunar-arcana-v0.5.0";
 const SHELL=["./","./index.html","./manifest.webmanifest"];
 
 self.addEventListener("install",event=>{

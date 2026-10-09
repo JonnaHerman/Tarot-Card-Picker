@@ -146,9 +146,9 @@ input:focus{border-color:rgba(226,191,115,.72);box-shadow:0 0 0 4px rgba(226,191
 }
 .card-img{
   display:block;max-width:100%;max-height:100%;width:auto;height:auto;
-  object-fit:contain;transition:transform .4s ease
+  object-fit:cover;object-position:center center;transform:scale(1.018);transition:transform .4s ease
 }
-.card-img.reversed{transform:rotate(180deg)}
+.card-img.reversed{transform:rotate(180deg) scale(1.018)}
 .image-loading{
   position:absolute;inset:0;display:grid;place-items:center;text-align:center;
   color:#8c8099;font:12px/1.7 Georgia,serif;padding:30px;z-index:-1
@@ -272,6 +272,63 @@ input:focus{border-color:rgba(226,191,115,.72);box-shadow:0 0 0 4px rgba(226,191
   .mobile-appbar{padding-top:calc(8px + env(safe-area-inset-top))}
 }
 @media(prefers-reduced-motion:reduce){.flip-inner{transition-duration:.01ms}}
+
+
+/* ---------- v0.5.0 spread selector + visual refinement ---------- */
+.mode-switch-wrap{text-align:center;margin-bottom:20px}
+.mode-caption{color:#8d8199;font:10px Georgia,serif;letter-spacing:.18em;text-transform:uppercase;margin-bottom:10px}
+.mode-switch{display:inline-flex;gap:4px;padding:5px;border-radius:999px;background:rgba(4,3,8,.52);border:1px solid rgba(255,255,255,.07);box-shadow:inset 0 1px 8px rgba(0,0,0,.35)}
+.mode-btn{min-width:105px;border:0;border-radius:999px;padding:10px 15px;background:transparent;color:#8e8299;cursor:pointer;font-size:12px;transition:.22s ease}
+.mode-btn:hover{color:#ddd1e5}
+.mode-btn.active{color:#231708;background:linear-gradient(135deg,#b98943,#f0d48c);box-shadow:0 7px 20px rgba(208,164,86,.14);font-weight:760}
+
+.panel{background:linear-gradient(180deg,rgba(28,20,41,.92),rgba(9,7,16,.96));border-color:rgba(226,191,115,.18);box-shadow:0 28px 80px rgba(0,0,0,.5),inset 0 1px rgba(255,255,255,.035)}
+.topbar{background:linear-gradient(145deg,rgba(255,255,255,.038),rgba(255,255,255,.012));border-radius:18px}
+.setting-card,.meta{background:linear-gradient(145deg,rgba(255,255,255,.03),rgba(255,255,255,.012))}
+
+.spread{display:grid;align-items:start;gap:18px}
+.spread[data-count="1"]{grid-template-columns:minmax(0,390px);justify-content:center}
+.spread[data-count="3"]{grid-template-columns:repeat(3,minmax(0,1fr))}
+.spread[data-count="5"]{grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+
+/* Fixed geometry for every tarot card, regardless of source image dimensions. */
+.flip{width:100%;height:auto;aspect-ratio:.59;perspective:1600px}
+.image-shell{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#050408;overflow:hidden}
+.card-img{display:block;width:100%;height:100%;max-width:none;max-height:none;object-fit:cover;object-position:center center;background:#050408;transform:scale(1.018)}
+.card-img.reversed{transform:rotate(180deg) scale(1.018)}
+
+.spread[data-count="5"] .meta{padding:11px;min-height:118px}
+.spread[data-count="5"] .meta .cn{font-size:17px}
+.spread[data-count="5"] .meta .en{font-size:9px}
+.spread[data-count="5"] .meta .keys{font-size:10px}
+.spread[data-count="5"] .badge{font-size:9px}
+.spread[data-count="5"] .front{padding:8px}
+.spread[data-count="5"] .face{border-radius:18px}
+
+@media(max-width:1100px){
+  .spread[data-count="5"]{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+  .spread[data-count="5"] .meta .cn{font-size:20px}
+}
+
+@media(max-width:720px){
+  .mode-switch-wrap{margin-bottom:17px}
+  .mode-switch{width:100%;display:grid;grid-template-columns:repeat(3,1fr);border-radius:16px;padding:4px}
+  .mode-btn{min-width:0;width:100%;border-radius:13px;padding:10px 7px}
+  .inputs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .inputs.count-1{grid-template-columns:minmax(0,1fr);max-width:220px;margin:0 auto}
+  .inputs.count-5{grid-template-columns:repeat(5,1fr);gap:5px}
+  .inputbox{min-width:0}
+  .inputs.count-5 .inputbox label{display:none}
+  .inputs.count-5 input{font-size:15px;padding:0 3px}
+  .spread,.spread[data-count="1"],.spread[data-count="3"],.spread[data-count="5"]{grid-template-columns:1fr;gap:25px}
+  .slot{max-width:430px;width:100%;margin:0 auto}
+  .flip{height:auto;aspect-ratio:.59}
+  .spread[data-count="5"] .meta{padding:14px;min-height:auto}
+  .spread[data-count="5"] .meta .cn{font-size:21px}
+  .spread[data-count="5"] .meta .en{font-size:11px}
+  .spread[data-count="5"] .meta .keys{font-size:11px}
+}
+
 </style>
 </head>
 
@@ -280,8 +337,8 @@ input:focus{border-color:rgba(226,191,115,.72);box-shadow:0 0 0 4px rgba(226,191
   <header class="desktop-hero">
     <div class="moon">☾</div>
     <div class="kicker">Lunar Arcana · Rider–Waite–Smith</div>
-    <h1 data-i18n="title">三张塔罗</h1>
-    <p data-i18n="heroText">使用 Rider–Waite–Smith 原版牌面。每次刷新或重新洗牌时，完整 78 张牌都会重新随机排列；你输入的三个数字只代表这一轮牌堆的位置。</p>
+    <h1 data-i18n="title">塔罗抽牌</h1>
+    <p data-i18n="heroText">选择一张、三张或五张牌。每次刷新或重新洗牌时，完整 78 张牌都会重新随机排列；你输入的数字只代表这一轮牌堆的位置。</p>
   </header>
 
   <header class="mobile-appbar">
@@ -306,21 +363,26 @@ input:focus{border-color:rgba(226,191,115,.72);box-shadow:0 0 0 4px rgba(226,191
       </div>
 
       <section class="controls">
-        <div class="inputs">
-          <div class="inputbox"><label data-i18n="first">FIRST</label><input id="n1" type="number" min="1" max="78" placeholder="1–78"></div>
-          <div class="inputbox"><label data-i18n="second">SECOND</label><input id="n2" type="number" min="1" max="78" placeholder="1–78"></div>
-          <div class="inputbox"><label data-i18n="third">THIRD</label><input id="n3" type="number" min="1" max="78" placeholder="1–78"></div>
+        <div class="mode-switch-wrap">
+          <div class="mode-caption" data-i18n="chooseSpread">选择抽牌数量</div>
+          <div class="mode-switch">
+            <button class="mode-btn" data-count="1" data-i18n="oneCard">单张牌</button>
+            <button class="mode-btn active" data-count="3" data-i18n="threeCards">三张牌</button>
+            <button class="mode-btn" data-count="5" data-i18n="fiveCards">五张牌</button>
+          </div>
         </div>
-        <div class="tip" data-i18n="tip">抽牌前牌面不会显示。点击翻牌后，三张牌会依次揭示。</div>
+
+        <div id="inputs" class="inputs count-3"></div>
+        <div class="tip" id="tip">输入三个 1–78 的数字，或让牌堆随机生成。</div>
         <div class="actions">
-          <button class="btn primary" id="drawBtn" data-i18n="drawBtn">翻开这三张牌</button>
-          <button class="btn" id="randomBtn" data-i18n="randomBtn">随机三个数字</button>
+          <button class="btn primary" id="drawBtn" data-i18n="drawBtn">翻开所选牌</button>
+          <button class="btn" id="randomBtn" data-i18n="randomBtn">随机数字</button>
         </div>
       </section>
 
-      <div class="section-title" data-i18n="spreadTitle">THE THREE CARD SPREAD</div>
-      <section id="spread" class="spread"></section>
-      <div id="result" class="result" data-i18n="initialResult">牌已洗好。请输入三个数字。</div>
+      <div class="section-title" id="spreadTitle">THREE CARD SPREAD</div>
+      <section id="spread" class="spread" data-count="3"></section>
+      <div id="result" class="result" data-i18n="initialResult">牌已洗好。请选择抽牌数量并输入数字。</div>
     </section>
 
     <section id="deckPage" class="deck-page">
@@ -432,6 +494,36 @@ const I18N={
  }
 };
 
+Object.assign(I18N.zh,{
+ title:"塔罗抽牌",
+ heroText:"选择一张、三张或五张牌。每次刷新或重新洗牌时，完整 78 张牌都会重新随机排列；你输入的数字只代表这一轮牌堆的位置。",
+ chooseSpread:"选择抽牌数量",oneCard:"单张牌",threeCards:"三张牌",fiveCards:"五张牌",
+ tip1:"输入一个 1–78 的数字，或让牌堆随机生成。",
+ tip3:"输入三个 1–78 的数字，或让牌堆随机生成。",
+ tip5:"输入五个 1–78 的数字，或让牌堆随机生成。",
+ drawBtn:"翻开所选牌",randomBtn:"随机数字",
+ spreadTitle1:"ONE CARD DRAW",spreadTitle3:"THREE CARD SPREAD",spreadTitle5:"FIVE CARD SPREAD",
+ initialResult:"牌已洗好。请选择抽牌数量并输入数字。",
+ inputLabel:"数字",invalid:"请输入正确数量的 1–78 整数，并避免重复。",
+ hiddenHelp:"输入数字后再翻牌。"
+});
+Object.assign(I18N.en,{
+ title:"Tarot Draw",
+ heroText:"Choose one, three, or five cards. The full 78-card deck is reshuffled whenever you refresh or reshuffle; your numbers represent positions in the current deck.",
+ chooseSpread:"Choose spread size",oneCard:"One card",threeCards:"Three cards",fiveCards:"Five cards",
+ tip1:"Enter one number from 1–78, or let the deck choose it.",
+ tip3:"Enter three numbers from 1–78, or let the deck choose them.",
+ tip5:"Enter five numbers from 1–78, or let the deck choose them.",
+ drawBtn:"Reveal selected cards",randomBtn:"Random numbers",
+ spreadTitle1:"ONE CARD DRAW",spreadTitle3:"THREE CARD SPREAD",spreadTitle5:"FIVE CARD SPREAD",
+ initialResult:"The deck is ready. Choose a spread size and enter your numbers.",
+ inputLabel:"NUMBER",invalid:"Enter the correct number of unique integers between 1 and 78.",
+ hiddenHelp:"Enter the number(s) and reveal the cards."
+});
+
+let spreadCount=Number(localStorage.getItem("tarot-spread-count")||3);
+if(![1,3,5].includes(spreadCount))spreadCount=3;
+
 let lang=localStorage.getItem("tarot-language")||"zh";
 function t(k){return I18N[lang][k]||k}
 function applyLanguage(next){
@@ -443,8 +535,11 @@ function applyLanguage(next){
   });
   document.querySelectorAll(".lang-choice").forEach(b=>b.classList.toggle("active",b.dataset.lang===lang));
   document.getElementById("langQuick").textContent=lang==="zh"?"EN":"中";
+  renderInputs();
+  updateSpreadCopy();
   renderDeckGrid();
   if(currentCards) renderCurrentReading(false);
+  else renderEmpty();
 }
 
 const EMBEDDED_IMAGES=JSON.parse(document.getElementById("embedded-images").textContent||"{}");
@@ -542,6 +637,35 @@ function cardDisplayName(card){return lang==="zh"?card.cn:card.en}
 function cardSubName(card){return lang==="zh"?card.en:card.cn}
 function cardMeaning(card){return lang==="zh"?card.meaningZh:card.meaningEn}
 
+function renderInputs(){
+  const box=document.getElementById("inputs");
+  if(!box)return;
+  box.className=`inputs count-${spreadCount}`;
+  box.innerHTML=Array.from({length:spreadCount},(_,i)=>`
+    <div class="inputbox">
+      <label>${t("inputLabel")} ${i+1}</label>
+      <input class="number-input" type="number" min="1" max="78" placeholder="1–78" aria-label="${t("inputLabel")} ${i+1}">
+    </div>
+  `).join("");
+  box.querySelectorAll("input").forEach(el=>el.addEventListener("keydown",e=>{if(e.key==="Enter")reveal()}));
+  if(currentNums&&currentNums.length===spreadCount){
+    box.querySelectorAll("input").forEach((el,i)=>el.value=currentNums[i]);
+  }
+}
+function updateSpreadCopy(){
+  document.querySelectorAll(".mode-btn").forEach(b=>b.classList.toggle("active",Number(b.dataset.count)===spreadCount));
+  document.getElementById("tip").textContent=t(`tip${spreadCount}`);
+  document.getElementById("spreadTitle").textContent=t(`spreadTitle${spreadCount}`);
+  document.getElementById("spread").dataset.count=String(spreadCount);
+}
+function setSpreadCount(count){
+  spreadCount=count;
+  localStorage.setItem("tarot-spread-count",String(count));
+  currentCards=null;currentNums=null;
+  renderInputs();updateSpreadCopy();renderEmpty();
+  document.getElementById("result").textContent=t("initialResult");
+}
+
 function emptySlot(i){
   return `<article class="slot">
     <div class="slot-head"><span>${t("card")} ${String(i+1).padStart(2,"0")}</span><span class="pos">${t("position")} —</span></div>
@@ -555,8 +679,9 @@ function emptySlot(i){
   </article>`;
 }
 function renderEmpty(){
-  currentCards=null;currentNums=null;
-  document.getElementById("spread").innerHTML=[0,1,2].map(emptySlot).join("");
+  const spread=document.getElementById("spread");
+  spread.dataset.count=String(spreadCount);
+  spread.innerHTML=Array.from({length:spreadCount},(_,i)=>emptySlot(i)).join("");
 }
 function renderDeckGrid(){
   const grid=document.getElementById("deckGrid");
@@ -572,8 +697,11 @@ function reshuffle(){
   toast(t("reshuffled"));
 }
 function values(){
-  const v=["n1","n2","n3"].map(x=>Number(document.getElementById(x).value));
-  return v.some(n=>!Number.isInteger(n)||n<1||n>78)?null:v;
+  const v=[...document.querySelectorAll(".number-input")].map(x=>Number(x.value));
+  if(v.length!==spreadCount)return null;
+  if(v.some(n=>!Number.isInteger(n)||n<1||n>78))return null;
+  if(new Set(v).size!==v.length)return null;
+  return v;
 }
 function slot(card,pos,i){
   const reversed=card.orientation==="rev"?" reversed":"";
@@ -605,11 +733,14 @@ function slot(card,pos,i){
 }
 function renderCurrentReading(animate=true){
   if(!currentCards||!currentNums){renderEmpty();return}
-  document.getElementById("spread").innerHTML=currentCards.map((c,i)=>slot(c,currentNums[i],i)).join("");
+  const spread=document.getElementById("spread");
+  spread.dataset.count=String(spreadCount);
+  spread.innerHTML=currentCards.map((c,i)=>slot(c,currentNums[i],i)).join("");
   const flips=[...document.querySelectorAll(".flip")];
+  const step=spreadCount===5?260:430;
   flips.forEach((el,i)=>{
     el.addEventListener("click",()=>el.classList.toggle("revealed"));
-    if(animate)setTimeout(()=>el.classList.add("revealed"),320+i*430);
+    if(animate)setTimeout(()=>el.classList.add("revealed"),300+i*step);
     else el.classList.add("revealed");
   });
   document.getElementById("result").innerHTML=currentNums.map((n,i)=>
@@ -622,10 +753,10 @@ function reveal(){
   currentNums=nums;currentCards=nums.map(n=>shuffled[n-1]);
   renderCurrentReading(true);
 }
-function randomThree(){
+function randomNumbers(){
   const a=[];
-  while(a.length<3){const n=randomInt(78)+1;if(!a.includes(n))a.push(n)}
-  ["n1","n2","n3"].forEach((x,i)=>document.getElementById(x).value=a[i]);
+  while(a.length<spreadCount){const n=randomInt(78)+1;if(!a.includes(n))a.push(n)}
+  document.querySelectorAll(".number-input").forEach((el,i)=>el.value=a[i]);
   reveal();
 }
 
@@ -707,19 +838,21 @@ async function exportOffline(){
 
 /* Events */
 document.getElementById("drawBtn").addEventListener("click",reveal);
-document.getElementById("randomBtn").addEventListener("click",randomThree);
+document.getElementById("randomBtn").addEventListener("click",randomNumbers);
 document.getElementById("reshuffleBtn").addEventListener("click",reshuffle);
 document.getElementById("offlineBtn").addEventListener("click",exportOffline);
 document.getElementById("offlineBtnMobile").addEventListener("click",exportOffline);
 document.getElementById("installBtn").addEventListener("click",installApp);
 document.getElementById("langQuick").addEventListener("click",()=>applyLanguage(lang==="zh"?"en":"zh"));
 document.querySelectorAll(".lang-choice").forEach(b=>b.addEventListener("click",()=>applyLanguage(b.dataset.lang)));
-["n1","n2","n3"].forEach(id=>document.getElementById(id).addEventListener("keydown",e=>{if(e.key==="Enter")reveal()}));
+document.querySelectorAll(".mode-btn").forEach(b=>b.addEventListener("click",()=>setSpreadCount(Number(b.dataset.count))));
 
 if("serviceWorker" in navigator && location.protocol.startsWith("http")){
   window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 }
 
+renderInputs();
+updateSpreadCopy();
 applyLanguage(lang);
 reshuffle();
 </script>
