@@ -3,858 +3,139 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b0812">
+<meta name="theme-color" content="#090711">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Lunar Arcana">
 <link rel="manifest" href="./manifest.webmanifest">
-<title>LUNAR ARCANA · Tarot Card Picker</title>
-
+<link rel="apple-touch-icon" href="./assets/icon-192.png">
+<title>Lunar Arcana</title>
 <script id="embedded-images" type="application/json">{}</script>
-
 <style>
-:root{
-  --bg:#080611;--panel:#151020;--panel2:#0d0a16;
-  --gold:#e2bf73;--gold2:#f3d797;--cream:#f5ecdb;
-  --text:#f8f2e9;--muted:#a79caf;--dim:#766d80;
-  --line:rgba(226,191,115,.28);--line2:rgba(255,255,255,.07);
-  --shadow:0 24px 70px rgba(0,0,0,.48);
-  --nav-h:72px;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;background:var(--bg)}
-body{
-  margin:0;min-height:100vh;color:var(--text);
-  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
-  background:
-    radial-gradient(900px 600px at 8% -5%,rgba(112,75,166,.22),transparent 62%),
-    radial-gradient(760px 540px at 95% 10%,rgba(226,191,115,.09),transparent 58%),
-    linear-gradient(155deg,#06050b,#100b19 55%,#07050d);
-}
-body:before{
-  content:"";position:fixed;inset:0;pointer-events:none;opacity:.42;z-index:-1;
-  background-image:
-    radial-gradient(circle at 20% 30%,#fff 0 1px,transparent 1.35px),
-    radial-gradient(circle at 75% 18%,#fff 0 1px,transparent 1.35px),
-    radial-gradient(circle at 42% 75%,#fff 0 1px,transparent 1.35px),
-    radial-gradient(circle at 90% 63%,#e5c47b 0 1px,transparent 1.4px);
-  background-size:260px 260px,330px 330px,310px 310px,420px 420px;
-}
-button,input{font:inherit}
-button{-webkit-tap-highlight-color:transparent}
-.shell{width:min(1240px,94vw);margin:0 auto;padding:36px 0 70px}
-.desktop-hero{text-align:center;padding:4px 0 25px}
-.moon{font-size:46px;color:var(--gold2);filter:drop-shadow(0 0 18px rgba(226,191,115,.18))}
-.kicker{font-family:Georgia,serif;color:var(--gold2);font-size:10px;letter-spacing:.32em;text-transform:uppercase}
-h1{
-  margin:10px 0 9px;font-family:Georgia,"Times New Roman","Noto Serif SC",serif;
-  font-size:clamp(38px,6vw,68px);font-weight:500;letter-spacing:.04em
-}
-.desktop-hero p{max-width:800px;margin:auto;color:var(--muted);font-size:13px;line-height:1.8}
-.mobile-appbar{display:none}
-.panel{
-  background:linear-gradient(180deg,rgba(26,20,41,.92),rgba(10,8,18,.95));
-  border:1px solid rgba(226,191,115,.17);border-radius:30px;padding:24px;
-  box-shadow:var(--shadow),inset 0 1px rgba(255,255,255,.03)
-}
-.topbar{
-  display:flex;justify-content:space-between;align-items:center;gap:13px;flex-wrap:wrap;
-  padding:14px 16px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.025)
-}
-.round{font-family:Georgia,serif;color:var(--gold2);letter-spacing:.06em}
-.round small{display:block;margin-top:5px;color:#8e829b;font:11px/1.5 Inter,sans-serif;letter-spacing:0}
-.top-actions{display:flex;gap:8px;flex-wrap:wrap}
-.btn{
-  border:1px solid var(--line);background:rgba(255,255,255,.035);color:var(--text);
-  min-height:42px;padding:10px 16px;border-radius:999px;cursor:pointer;transition:.2s;font-size:12px
-}
-.btn:hover{transform:translateY(-1px);border-color:rgba(226,191,115,.62)}
-.btn.primary{
-  color:#211608;border:0;font-weight:760;
-  background:linear-gradient(135deg,#c39447,#f0d18c,#c99f55);
-  box-shadow:0 8px 24px rgba(217,176,101,.17)
-}
-.btn.icon{width:42px;padding:0;display:grid;place-items:center}
-.controls{padding:28px 0 13px}
-.inputs{display:flex;justify-content:center;gap:11px;flex-wrap:wrap}
-.inputbox{position:relative}
-.inputbox label{
-  position:absolute;left:12px;top:-7px;background:#151021;padding:0 7px;
-  color:#9989ae;font-size:9px;letter-spacing:.16em
-}
-input{
-  width:145px;height:54px;border:1px solid var(--line);border-radius:14px;
-  background:rgba(5,4,10,.62);color:#fff;text-align:center;font-family:Georgia,serif;
-  font-size:19px;outline:none
-}
-input:focus{border-color:rgba(226,191,115,.72);box-shadow:0 0 0 4px rgba(226,191,115,.05)}
-.tip{text-align:center;color:#83798d;font-size:11px;margin:11px 0 17px}
-.actions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap}
-.section-title{
-  display:flex;align-items:center;justify-content:center;gap:13px;
-  margin:27px 0 16px;color:#a99cb6;font:11px Georgia,serif;letter-spacing:.19em
-}
-.section-title:before,.section-title:after{
-  content:"";height:1px;width:min(110px,15vw);
-  background:linear-gradient(90deg,transparent,var(--line))
-}
-.section-title:after{background:linear-gradient(90deg,var(--line),transparent)}
-.spread{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
-.slot-head{
-  display:flex;justify-content:space-between;padding:0 4px 8px;
-  font-size:10px;color:#897e94;letter-spacing:.14em;text-transform:uppercase
-}
-.slot-head .pos{color:var(--gold2)}
-.flip{height:625px;perspective:1600px;cursor:pointer}
-.flip-inner{
-  position:relative;width:100%;height:100%;transform-style:preserve-3d;
-  transition:transform 1s cubic-bezier(.22,.72,.18,1)
-}
-.flip.revealed .flip-inner{transform:rotateY(180deg)}
-.face{
-  position:absolute;inset:0;border-radius:23px;overflow:hidden;
-  backface-visibility:hidden;-webkit-backface-visibility:hidden;
-  border:1px solid rgba(226,191,115,.31);box-shadow:0 20px 48px rgba(0,0,0,.38)
-}
-.back{
-  display:grid;place-items:center;
-  background:
-    radial-gradient(circle at 50% 50%,rgba(226,191,115,.12),transparent 24%),
-    repeating-radial-gradient(circle at 50% 50%,rgba(226,191,115,.035) 0 1px,transparent 1px 14px),
-    linear-gradient(145deg,#1d142b,#090712)
-}
-.back:before{content:"";position:absolute;inset:13px;border:1px solid rgba(226,191,115,.24);border-radius:16px}
-.back:after{
-  content:"";position:absolute;inset:23px;border:1px solid rgba(226,191,115,.10);border-radius:12px;
-  background:
-    linear-gradient(45deg,transparent 49.6%,rgba(226,191,115,.11) 50%,transparent 50.4%),
-    linear-gradient(-45deg,transparent 49.6%,rgba(226,191,115,.11) 50%,transparent 50.4%),
-    radial-gradient(circle,transparent 0 48px,rgba(226,191,115,.12) 49px 50px,transparent 51px)
-}
-.backmark{z-index:2;text-align:center;color:var(--gold2)}
-.backmark .crescent{font-size:70px;font-family:Georgia,serif;text-shadow:0 0 25px rgba(226,191,115,.22)}
-.backmark .word{margin-top:10px;font:10px Georgia,serif;letter-spacing:.28em;color:#b69b64}
-.front{
-  transform:rotateY(180deg);
-  background:linear-gradient(180deg,#15101f,#090710);
-  padding:13px;display:flex;align-items:center;justify-content:center
-}
-.image-shell{
-  width:100%;height:100%;border-radius:15px;overflow:hidden;
-  display:flex;align-items:center;justify-content:center;background:#050408;
-  border:1px solid rgba(226,191,115,.25);position:relative
-}
-.card-img{
-  display:block;max-width:100%;max-height:100%;width:auto;height:auto;
-  object-fit:cover;object-position:center center;transform:scale(1.018);transition:transform .4s ease
-}
-.card-img.reversed{transform:rotate(180deg) scale(1.018)}
-.image-loading{
-  position:absolute;inset:0;display:grid;place-items:center;text-align:center;
-  color:#8c8099;font:12px/1.7 Georgia,serif;padding:30px;z-index:-1
-}
-.meta{
-  margin-top:11px;min-height:127px;padding:14px 15px;border-radius:16px;
-  border:1px solid var(--line2);background:rgba(255,255,255,.025)
-}
-.meta .cn{font:22px Georgia,"Noto Serif SC",serif;color:#fff0cf}
-.meta .en{font-size:11px;color:#8e819c;margin-top:3px}
-.meta .keys{font-size:12px;color:#c5bacf;line-height:1.65;margin-top:9px}
-.badge{
-  display:inline-block;margin-top:8px;border:1px solid rgba(226,191,115,.24);
-  border-radius:999px;padding:4px 9px;color:#e4c476;font-size:10px
-}
-.result{
-  margin-top:21px;padding:14px 17px;border:1px solid var(--line2);border-radius:16px;
-  background:rgba(0,0,0,.16);text-align:center;color:#c8bdcf;font-size:12px;line-height:1.75
-}
-.deck-page,.settings-page{display:none}
-.deck-page.active,.settings-page.active{display:block}
-.draw-page.active{display:block}
-.draw-page.hidden{display:none}
-.deck-head,.settings-head{
-  font:26px Georgia,"Noto Serif SC",serif;color:#f2dfb2;margin:8px 0 5px
-}
-.deck-sub,.settings-sub{color:var(--muted);font-size:12px;line-height:1.7;margin-bottom:18px}
-.deckgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}
-.deckitem{
-  padding:8px;border:1px solid var(--line2);border-radius:9px;background:rgba(255,255,255,.02);
-  color:#a99db7;font-size:10px;line-height:1.5
-}
-.deckitem b{color:#e7cb8d}
-.setting-card{
-  border:1px solid var(--line2);border-radius:18px;padding:16px;background:rgba(255,255,255,.025);margin-bottom:12px
-}
-.setting-title{font-size:14px;color:#f0dfb8;margin-bottom:5px}
-.setting-desc{color:#8f8499;font-size:11px;line-height:1.6;margin-bottom:12px}
-.segment{display:flex;gap:8px;flex-wrap:wrap}
-.segment button.active{
-  color:#211608;border-color:transparent;background:linear-gradient(135deg,#c39447,#f0d18c,#c99f55);font-weight:700
-}
-.source-note{text-align:center;color:#756b80;font-size:10px;line-height:1.7;margin-top:18px}
-.mobile-nav{display:none}
-.toast{
-  position:fixed;left:50%;bottom:24px;transform:translate(-50%,22px);opacity:0;
-  background:#17111f;border:1px solid var(--line);border-radius:999px;padding:10px 15px;
-  color:#e6cc91;font-size:11px;pointer-events:none;transition:.25s;
-  box-shadow:0 13px 35px rgba(0,0,0,.42);z-index:99;white-space:nowrap
-}
-.toast.show{opacity:1;transform:translate(-50%,0)}
-
-@media(max-width:950px){
-  .flip{height:540px}.spread{gap:12px}
-}
-
-/* -------- Mobile mini-app layout -------- */
-@media(max-width:720px){
-  body{background:#0a0710;padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom))}
-  .shell{width:100%;padding:0}
-  .desktop-hero{display:none}
-  .mobile-appbar{
-    display:flex;position:sticky;top:0;z-index:30;height:64px;
-    align-items:center;justify-content:space-between;padding:
-      calc(8px + env(safe-area-inset-top)) 16px 8px;
-    background:rgba(9,7,15,.88);backdrop-filter:blur(18px);
-    border-bottom:1px solid rgba(255,255,255,.055)
-  }
-  .app-title{display:flex;align-items:center;gap:9px}
-  .app-logo{
-    width:34px;height:34px;border-radius:11px;display:grid;place-items:center;
-    background:linear-gradient(145deg,#241732,#100b19);border:1px solid var(--line);
-    color:var(--gold2);font-family:Georgia,serif;font-size:21px
-  }
-  .app-name{font:16px Georgia,"Noto Serif SC",serif;color:#f5e5bf}
-  .app-name small{display:block;color:#776d82;font:8px Inter,sans-serif;letter-spacing:.16em;margin-top:2px}
-  .panel{
-    background:transparent;border:0;border-radius:0;padding:14px 14px 8px;box-shadow:none
-  }
-  .topbar{
-    border-radius:18px;padding:13px;background:linear-gradient(145deg,rgba(34,25,48,.82),rgba(15,11,24,.84));
-    border-color:rgba(226,191,115,.16)
-  }
-  .round{font-size:13px}
-  .round small{font-size:10px}
-  .top-actions .desktop-only{display:none}
-  .controls{padding:21px 0 10px}
-  .inputs{gap:8px;flex-wrap:nowrap}
-  .inputbox{flex:1;min-width:0}
-  input{width:100%;height:52px;font-size:18px;border-radius:15px}
-  .actions{display:grid;grid-template-columns:1.35fr 1fr;gap:9px}
-  .actions .btn{width:100%;padding-inline:8px}
-  .section-title{margin:24px 0 14px;font-size:9px}
-  .spread{grid-template-columns:1fr;gap:24px}
-  .slot{max-width:440px;width:100%;margin:0 auto}
-  .flip{height:min(68vh,620px);min-height:500px}
-  .face{border-radius:25px}
-  .meta{border-radius:18px;min-height:auto;padding:14px}
-  .meta .cn{font-size:21px}
-  .result{margin-bottom:8px}
-  .deckgrid{grid-template-columns:repeat(3,1fr);gap:8px}
-  .deckitem{font-size:10px;padding:9px}
-  .source-note{padding:0 16px 12px}
-  .mobile-nav{
-    display:grid;grid-template-columns:repeat(3,1fr);position:fixed;
-    left:0;right:0;bottom:0;z-index:40;height:calc(var(--nav-h) + env(safe-area-inset-bottom));
-    padding:7px 12px env(safe-area-inset-bottom);
-    background:rgba(10,7,16,.92);backdrop-filter:blur(20px);
-    border-top:1px solid rgba(255,255,255,.065)
-  }
-  .nav-btn{
-    border:0;background:transparent;color:#776e82;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;gap:3px;font-size:9px;cursor:pointer
-  }
-  .nav-btn .ico{font-size:21px;line-height:1}
-  .nav-btn.active{color:var(--gold2)}
-  .settings-page,.deck-page{padding-bottom:8px}
-  .toast{bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 12px);max-width:88vw;overflow:hidden;text-overflow:ellipsis}
-}
-@media(display-mode:standalone){
-  .mobile-appbar{padding-top:calc(8px + env(safe-area-inset-top))}
-}
-@media(prefers-reduced-motion:reduce){.flip-inner{transition-duration:.01ms}}
-
-
-/* ---------- v0.5.0 spread selector + visual refinement ---------- */
-.mode-switch-wrap{text-align:center;margin-bottom:20px}
-.mode-caption{color:#8d8199;font:10px Georgia,serif;letter-spacing:.18em;text-transform:uppercase;margin-bottom:10px}
-.mode-switch{display:inline-flex;gap:4px;padding:5px;border-radius:999px;background:rgba(4,3,8,.52);border:1px solid rgba(255,255,255,.07);box-shadow:inset 0 1px 8px rgba(0,0,0,.35)}
-.mode-btn{min-width:105px;border:0;border-radius:999px;padding:10px 15px;background:transparent;color:#8e8299;cursor:pointer;font-size:12px;transition:.22s ease}
-.mode-btn:hover{color:#ddd1e5}
-.mode-btn.active{color:#231708;background:linear-gradient(135deg,#b98943,#f0d48c);box-shadow:0 7px 20px rgba(208,164,86,.14);font-weight:760}
-
-.panel{background:linear-gradient(180deg,rgba(28,20,41,.92),rgba(9,7,16,.96));border-color:rgba(226,191,115,.18);box-shadow:0 28px 80px rgba(0,0,0,.5),inset 0 1px rgba(255,255,255,.035)}
-.topbar{background:linear-gradient(145deg,rgba(255,255,255,.038),rgba(255,255,255,.012));border-radius:18px}
-.setting-card,.meta{background:linear-gradient(145deg,rgba(255,255,255,.03),rgba(255,255,255,.012))}
-
-.spread{display:grid;align-items:start;gap:18px}
-.spread[data-count="1"]{grid-template-columns:minmax(0,390px);justify-content:center}
-.spread[data-count="3"]{grid-template-columns:repeat(3,minmax(0,1fr))}
-.spread[data-count="5"]{grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
-
-/* Fixed geometry for every tarot card, regardless of source image dimensions. */
-.flip{width:100%;height:auto;aspect-ratio:.59;perspective:1600px}
-.image-shell{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#050408;overflow:hidden}
-.card-img{display:block;width:100%;height:100%;max-width:none;max-height:none;object-fit:cover;object-position:center center;background:#050408;transform:scale(1.018)}
-.card-img.reversed{transform:rotate(180deg) scale(1.018)}
-
-.spread[data-count="5"] .meta{padding:11px;min-height:118px}
-.spread[data-count="5"] .meta .cn{font-size:17px}
-.spread[data-count="5"] .meta .en{font-size:9px}
-.spread[data-count="5"] .meta .keys{font-size:10px}
-.spread[data-count="5"] .badge{font-size:9px}
-.spread[data-count="5"] .front{padding:8px}
-.spread[data-count="5"] .face{border-radius:18px}
-
-@media(max-width:1100px){
-  .spread[data-count="5"]{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-  .spread[data-count="5"] .meta .cn{font-size:20px}
-}
-
-@media(max-width:720px){
-  .mode-switch-wrap{margin-bottom:17px}
-  .mode-switch{width:100%;display:grid;grid-template-columns:repeat(3,1fr);border-radius:16px;padding:4px}
-  .mode-btn{min-width:0;width:100%;border-radius:13px;padding:10px 7px}
-  .inputs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-  .inputs.count-1{grid-template-columns:minmax(0,1fr);max-width:220px;margin:0 auto}
-  .inputs.count-5{grid-template-columns:repeat(5,1fr);gap:5px}
-  .inputbox{min-width:0}
-  .inputs.count-5 .inputbox label{display:none}
-  .inputs.count-5 input{font-size:15px;padding:0 3px}
-  .spread,.spread[data-count="1"],.spread[data-count="3"],.spread[data-count="5"]{grid-template-columns:1fr;gap:25px}
-  .slot{max-width:430px;width:100%;margin:0 auto}
-  .flip{height:auto;aspect-ratio:.59}
-  .spread[data-count="5"] .meta{padding:14px;min-height:auto}
-  .spread[data-count="5"] .meta .cn{font-size:21px}
-  .spread[data-count="5"] .meta .en{font-size:11px}
-  .spread[data-count="5"] .meta .keys{font-size:11px}
-}
-
+:root{--bg:#06040a;--surface:#0e0a16;--surface2:#171020;--gold:#dfbd72;--gold2:#f4d99b;--text:#f8f2e9;--muted:#aaa0b3;--dim:#756c7f;--line:rgba(223,189,114,.23);--soft:rgba(255,255,255,.065);--shadow:0 28px 80px rgba(0,0,0,.52);--app-w:430px;--nav-h:72px}
+*{box-sizing:border-box} html{background:#050309}
+body{margin:0;min-height:100dvh;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:radial-gradient(900px 650px at 10% -8%,rgba(100,63,145,.24),transparent 65%),radial-gradient(800px 600px at 92% 6%,rgba(223,189,114,.08),transparent 62%),linear-gradient(155deg,#05040a,#0d0814 55%,#05040a)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.32;background-image:radial-gradient(circle at 20% 30%,#fff 0 1px,transparent 1.35px),radial-gradient(circle at 75% 18%,#fff 0 1px,transparent 1.35px),radial-gradient(circle at 42% 75%,#fff 0 1px,transparent 1.35px),radial-gradient(circle at 90% 63%,#e5c47b 0 1px,transparent 1.4px);background-size:260px 260px,330px 330px,310px 310px,420px 420px}
+button,input,select,textarea{font:inherit} button{-webkit-tap-highlight-color:transparent}
+.desktop-wrap{min-height:100dvh;display:grid;place-items:center;padding:20px}
+.app{width:min(var(--app-w),100vw);height:min(900px,calc(100dvh - 40px));min-height:680px;display:flex;flex-direction:column;overflow:hidden;position:relative;background:radial-gradient(500px 330px at 50% -10%,rgba(113,72,155,.20),transparent 70%),linear-gradient(180deg,#110b1a 0%,#09070f 38%,#08060d 100%);border:1px solid rgba(223,189,114,.17);border-radius:34px;box-shadow:var(--shadow),inset 0 1px rgba(255,255,255,.035)}
+.app:after{content:"";position:absolute;inset:7px;border:1px solid rgba(223,189,114,.045);border-radius:27px;pointer-events:none;z-index:40}
+.topbar{min-height:64px;flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--soft);background:rgba(9,7,15,.80);backdrop-filter:blur(18px);z-index:20}
+.brand{display:flex;align-items:center;gap:10px}.brand-icon{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;border:1px solid var(--line);background:linear-gradient(145deg,#251733,#100b19);color:var(--gold2);font:22px Georgia,serif}.brand-name{font:16px Georgia,"Noto Serif SC",serif;color:#f4e4be}.brand-name small{display:block;font:8px Inter,sans-serif;color:#756b80;letter-spacing:.18em;margin-top:2px}.icon-btn{width:38px;height:38px;border-radius:12px;border:1px solid var(--soft);background:rgba(255,255,255,.025);color:#cbbfd1;cursor:pointer}
+.viewport{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}.viewport::-webkit-scrollbar{display:none}
+.screen{display:none;min-height:100%;padding:18px 16px 24px}.screen.active{display:block}
+.bottom-nav{flex:0 0 var(--nav-h);display:grid;grid-template-columns:repeat(4,1fr);padding:7px 8px max(7px,env(safe-area-inset-bottom));border-top:1px solid var(--soft);background:rgba(9,7,15,.90);backdrop-filter:blur(20px);z-index:20}.nav-btn{border:0;background:transparent;color:#716879;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:9px}.nav-btn .nav-icon{font-size:20px;line-height:1}.nav-btn.active{color:var(--gold2)}
+.hero{padding:8px 2px 20px}.hero-kicker{font-size:10px;color:var(--gold);letter-spacing:.18em}.hero h1{font:34px/1.08 Georgia,"Noto Serif SC",serif;font-weight:500;margin:8px 0;color:#fff0ce}.hero p{font-size:12px;color:var(--muted);line-height:1.7;margin:0}.moon-orbit{width:62px;height:62px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;margin-bottom:13px;position:relative;color:var(--gold2);font:38px Georgia,serif;box-shadow:0 0 28px rgba(223,189,114,.06)}.moon-orbit:after{content:"✦";position:absolute;right:-7px;top:7px;font-size:10px;color:var(--gold)}
+.section-row{display:flex;align-items:center;justify-content:space-between;margin:5px 1px 11px}.section-title{font:18px Georgia,"Noto Serif SC",serif;color:#f0dfb9}.section-link{border:0;background:transparent;color:#8c8197;font-size:10px;cursor:pointer}
+.daily-card{border:1px solid var(--line);border-radius:22px;padding:16px;background:radial-gradient(circle at 85% 15%,rgba(223,189,114,.10),transparent 24%),linear-gradient(145deg,rgba(39,27,54,.92),rgba(17,12,26,.95));box-shadow:0 16px 34px rgba(0,0,0,.24);cursor:pointer;margin-bottom:22px}.daily-top{display:flex;align-items:center;justify-content:space-between}.daily-badge{font-size:9px;letter-spacing:.13em;color:var(--gold)}.daily-symbol{font-size:26px;color:var(--gold2)}.daily-card h3{font:24px Georgia,"Noto Serif SC",serif;margin:16px 0 5px;color:#fff1d4}.daily-card p{font-size:11px;color:#9b90a5;line-height:1.6;margin:0}.daily-action{display:inline-flex;margin-top:14px;color:#e8cc8d;font-size:11px}
+.category-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:22px}.category-card{min-height:112px;border:1px solid var(--soft);border-radius:19px;padding:14px;cursor:pointer;background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.014))}.cat-icon{font-size:24px;color:var(--gold2);margin-bottom:13px}.cat-name{font:17px Georgia,"Noto Serif SC",serif;color:#eee1c5}.cat-sub{font-size:9px;color:#766d80;margin-top:3px}
+.recent-list{display:grid;gap:8px}.recent-empty,.recent-item{border:1px solid var(--soft);border-radius:15px;padding:12px 13px;background:rgba(255,255,255,.02)}.recent-empty{font-size:11px;color:#776d80;text-align:center;padding:20px}.recent-item{cursor:pointer}.recent-top{display:flex;justify-content:space-between;gap:10px}.recent-title{font-size:12px;color:#e5d5b5}.recent-date{font-size:9px;color:#685f70}.recent-cards{font-size:10px;color:#8f849a;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.page-head{margin:4px 1px 15px}.page-title{font:28px Georgia,"Noto Serif SC",serif;color:#f4e2ba;margin:0 0 5px}.page-sub{font-size:11px;color:#897f92;line-height:1.65}
+.chips{display:flex;gap:7px;overflow-x:auto;margin:0 -2px 15px;padding:0 2px 4px;scrollbar-width:none}.chip{flex:0 0 auto;border:1px solid var(--soft);border-radius:999px;padding:8px 12px;background:rgba(255,255,255,.025);color:#8e8498;font-size:10px;cursor:pointer}.chip.active{border-color:var(--line);color:#251909;background:linear-gradient(135deg,#c39650,#efd18b);font-weight:700}
+.spread-list{display:grid;gap:10px}.spread-card{border:1px solid var(--soft);border-radius:19px;padding:14px;display:grid;grid-template-columns:58px 1fr auto;align-items:center;gap:12px;background:linear-gradient(145deg,rgba(255,255,255,.032),rgba(255,255,255,.012));cursor:pointer}.spread-mini{width:58px;height:58px;border-radius:15px;border:1px solid var(--line);background:radial-gradient(circle,rgba(223,189,114,.11),transparent 65%),#100b18;display:grid;place-items:center;color:var(--gold2);font:22px Georgia,serif}.spread-card h3{font:16px Georgia,"Noto Serif SC",serif;color:#eee0c4;margin:0 0 4px}.spread-card p{font-size:9px;color:#81768a;line-height:1.5;margin:0}.spread-meta{font-size:9px;color:#ad9666;margin-top:6px}.chev{color:#695f72;font-size:20px}
+.search{width:100%;height:44px;border-radius:14px;border:1px solid var(--soft);background:rgba(255,255,255,.025);color:#eee;padding:0 13px;outline:none;margin-bottom:11px;font-size:12px}.card-library{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.library-card{border:1px solid var(--soft);border-radius:14px;padding:8px;background:rgba(255,255,255,.018);cursor:pointer;min-width:0}.library-thumb{width:100%;aspect-ratio:7/12;border-radius:9px;overflow:hidden;background:#050408;margin-bottom:7px}.library-thumb img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}.library-name{font-size:9px;color:#e3d5b7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.library-sub{font-size:8px;color:#6f6578;margin-top:2px}
+.settings-group{display:grid;gap:10px}.setting{border:1px solid var(--soft);border-radius:18px;padding:14px;background:rgba(255,255,255,.022)}.setting-label{font-size:12px;color:#e8dabd;margin-bottom:5px}.setting-desc{font-size:9px;color:#7f7588;line-height:1.55;margin-bottom:10px}.select{width:100%;height:43px;border-radius:12px;border:1px solid var(--line);background:#100b18;color:#f3eadc;padding:0 11px;font-size:11px}
+.btn{width:100%;min-height:43px;border-radius:13px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:#e8ddc9;cursor:pointer;font-size:11px}.btn.primary{color:#241809;border:0;font-weight:700;background:linear-gradient(135deg,#b98b46,#efd18b,#bd9451)}.btn.danger{border-color:rgba(201,122,122,.25);color:#cf9090}
+.reading-screen{padding-top:11px}.reading-header{display:flex;align-items:center;gap:9px;margin-bottom:14px}.back-btn{width:38px;height:38px;border-radius:12px;border:1px solid var(--soft);background:rgba(255,255,255,.025);color:#c8bccf;cursor:pointer}.reading-title{font:21px Georgia,"Noto Serif SC",serif;color:#f1dfb8}.reading-sub{font-size:9px;color:#766c80;margin-top:2px}
+.spread-note{border:1px solid var(--soft);border-radius:15px;padding:11px 12px;background:rgba(255,255,255,.018);color:#8c8195;font-size:9px;line-height:1.55;margin-bottom:12px}.position-preview{display:grid;gap:7px;margin-bottom:14px}.position-row{display:grid;grid-template-columns:28px 1fr;gap:9px;align-items:start;border:1px solid var(--soft);border-radius:13px;padding:9px;background:rgba(255,255,255,.018)}.pos-num{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:#1b1227;border:1px solid var(--line);color:var(--gold2);font:12px Georgia,serif}.pos-title{font-size:11px;color:#e2d4b7}.pos-hint{font-size:9px;color:#766c80;line-height:1.45;margin-top:2px}
+.question{width:100%;min-height:66px;resize:vertical;border:1px solid var(--soft);border-radius:14px;background:rgba(255,255,255,.02);color:#eee;padding:10px 11px;font-size:11px;outline:none;margin-bottom:10px}.shuffle-bar{display:flex;justify-content:space-between;align-items:center;gap:8px;border:1px solid var(--soft);border-radius:13px;padding:9px 11px;margin-bottom:10px;background:rgba(255,255,255,.018)}.shuffle-id{font-size:9px;color:#7b7184}.shuffle-id b{color:#d3b773}.small-btn{border:1px solid var(--line);border-radius:999px;padding:6px 9px;background:rgba(255,255,255,.025);color:#baabbe;font-size:9px;cursor:pointer}
+.number-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:9px}.number-grid.count-1{grid-template-columns:1fr}.num-input{min-width:0;height:44px;border-radius:12px;border:1px solid var(--line);background:#0d0913;color:#fff;text-align:center;font:16px Georgia,serif;outline:none}.read-actions{display:grid;grid-template-columns:1fr 1.25fr;gap:8px;margin-bottom:16px}
+.reveal-list{display:grid;gap:18px}.reading-card{border:1px solid var(--soft);border-radius:20px;padding:12px;background:linear-gradient(145deg,rgba(255,255,255,.028),rgba(255,255,255,.012))}.position-label{font-size:10px;color:var(--gold);letter-spacing:.08em;margin-bottom:9px}
+.tarot-frame{width:min(270px,78%);aspect-ratio:7/12;margin:0 auto 11px;perspective:1400px}.flip-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.22,.72,.18,1)}.tarot-frame.revealed .flip-inner{transform:rotateY(180deg)}.face{position:absolute;inset:0;border-radius:17px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:1px solid rgba(223,189,114,.28);box-shadow:0 16px 34px rgba(0,0,0,.35)}
+.card-back{display:grid;place-items:center;background:radial-gradient(circle,rgba(223,189,114,.11),transparent 28%),repeating-radial-gradient(circle,rgba(223,189,114,.035) 0 1px,transparent 1px 14px),linear-gradient(145deg,#21152f,#080610)}.card-back:before{content:"";position:absolute;inset:10px;border:1px solid rgba(223,189,114,.22);border-radius:12px}.card-back-mark{color:var(--gold2);font:48px Georgia,serif;z-index:2}
+.card-front{transform:rotateY(180deg);background:#050408;padding:7px}.card-front img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;border-radius:11px}.card-front img.reversed{transform:rotate(180deg)}
+.card-info h3{font:22px Georgia,"Noto Serif SC",serif;color:#f1dfb9;margin:0}.card-alt{font-size:9px;color:#796f82;margin-top:2px}.orientation{display:inline-flex;margin-top:7px;border:1px solid var(--line);border-radius:999px;padding:4px 8px;color:#d6ba7a;font-size:9px}.keywords{font-size:10px;color:#b7acbf;line-height:1.6;margin-top:9px}.position-reading{margin-top:10px;padding:10px 11px;border-radius:12px;background:#0e0a15;border:1px solid var(--soft);font-size:10px;color:#9f94a8;line-height:1.65}
+.summary-card{border:1px solid var(--line);border-radius:18px;padding:14px;margin-top:18px;background:radial-gradient(circle at 90% 10%,rgba(223,189,114,.08),transparent 28%),rgba(255,255,255,.02)}.summary-card h3{font:19px Georgia,"Noto Serif SC",serif;color:#f0ddb5;margin:0 0 7px}.summary-card p{font-size:10px;color:#978c9f;line-height:1.65;margin:0}.disclaimer{font-size:8px;color:#5f5667;line-height:1.5;margin-top:13px;text-align:center}
+.card-detail{border:1px solid var(--soft);border-radius:18px;padding:13px;background:rgba(255,255,255,.02)}.card-detail img{width:170px;aspect-ratio:7/12;object-fit:cover;object-position:center;display:block;margin:0 auto 13px;border-radius:13px;border:1px solid var(--line)}.card-detail h2{font:25px Georgia,"Noto Serif SC",serif;color:#f0dfba;text-align:center;margin:0}.card-detail .minor{text-align:center;font-size:10px;color:#766c7f;margin-top:3px}.card-detail p{font-size:10px;color:#9b90a3;line-height:1.7;margin:12px 0 0}
+@media(max-width:470px){.desktop-wrap{display:block;padding:0}.app{width:100vw;height:100dvh;min-height:0;border:0;border-radius:0;box-shadow:none}.app:after{display:none}.topbar{padding-top:max(12px,env(safe-area-inset-top))}}
 </style>
 </head>
-
 <body>
-<div class="shell">
-  <header class="desktop-hero">
-    <div class="moon">☾</div>
-    <div class="kicker">Lunar Arcana · Rider–Waite–Smith</div>
-    <h1 data-i18n="title">塔罗抽牌</h1>
-    <p data-i18n="heroText">选择一张、三张或五张牌。每次刷新或重新洗牌时，完整 78 张牌都会重新随机排列；你输入的数字只代表这一轮牌堆的位置。</p>
-  </header>
-
-  <header class="mobile-appbar">
-    <div class="app-title">
-      <div class="app-logo">☾</div>
-      <div class="app-name">Lunar Arcana<small>TAROT PICKER</small></div>
-    </div>
-    <button class="btn icon" id="langQuick" aria-label="Language">文</button>
-  </header>
-
-  <main class="panel">
-    <section id="drawPage" class="draw-page active">
-      <div class="topbar">
-        <div class="round">
-          <span data-i18n="roundLabel">本轮牌序</span> · <span id="shuffleId">——</span>
-          <small data-i18n="roundHint">重新洗牌后，数字对应关系与正逆位都会变化。</small>
-        </div>
-        <div class="top-actions">
-          <button class="btn desktop-only" id="offlineBtn" data-i18n="offlineBtn">⇩ 生成完全离线版</button>
-          <button class="btn" id="reshuffleBtn" data-i18n="reshuffleBtn">↻ 重新洗牌</button>
-        </div>
-      </div>
-
-      <section class="controls">
-        <div class="mode-switch-wrap">
-          <div class="mode-caption" data-i18n="chooseSpread">选择抽牌数量</div>
-          <div class="mode-switch">
-            <button class="mode-btn" data-count="1" data-i18n="oneCard">单张牌</button>
-            <button class="mode-btn active" data-count="3" data-i18n="threeCards">三张牌</button>
-            <button class="mode-btn" data-count="5" data-i18n="fiveCards">五张牌</button>
-          </div>
-        </div>
-
-        <div id="inputs" class="inputs count-3"></div>
-        <div class="tip" id="tip">输入三个 1–78 的数字，或让牌堆随机生成。</div>
-        <div class="actions">
-          <button class="btn primary" id="drawBtn" data-i18n="drawBtn">翻开所选牌</button>
-          <button class="btn" id="randomBtn" data-i18n="randomBtn">随机数字</button>
-        </div>
-      </section>
-
-      <div class="section-title" id="spreadTitle">THREE CARD SPREAD</div>
-      <section id="spread" class="spread" data-count="3"></section>
-      <div id="result" class="result" data-i18n="initialResult">牌已洗好。请选择抽牌数量并输入数字。</div>
-    </section>
-
-    <section id="deckPage" class="deck-page">
-      <div class="deck-head" data-i18n="deckTitle">本轮牌堆</div>
-      <div class="deck-sub" data-i18n="deckSub">这里显示本轮 1–78 的完整随机对应关系。重新洗牌后会全部改变。</div>
-      <div id="deckGrid" class="deckgrid"></div>
-    </section>
-
-    <section id="settingsPage" class="settings-page">
-      <div class="settings-head" data-i18n="settingsTitle">设置</div>
-      <div class="settings-sub" data-i18n="settingsSub">语言、安装和离线功能都放在这里。</div>
-
-      <div class="setting-card">
-        <div class="setting-title" data-i18n="languageTitle">语言</div>
-        <div class="setting-desc" data-i18n="languageDesc">切换界面语言。你的选择会保存在这台设备上。</div>
-        <div class="segment">
-          <button class="btn lang-choice" data-lang="zh">中文</button>
-          <button class="btn lang-choice" data-lang="en">English</button>
-        </div>
-      </div>
-
-      <div class="setting-card">
-        <div class="setting-title" data-i18n="installTitle">添加到手机主屏幕</div>
-        <div class="setting-desc" data-i18n="installDesc">部署到 GitHub Pages 后，可以像 App 一样从手机主屏幕打开。</div>
-        <button class="btn primary" id="installBtn" data-i18n="installBtn">安装 / 添加到主屏幕</button>
-      </div>
-
-      <div class="setting-card">
-        <div class="setting-title" data-i18n="offlineTitle">完全离线版</div>
-        <div class="setting-desc" data-i18n="offlineDesc">下载一个把 78 张牌面全部嵌入其中的独立 HTML 文件。</div>
-        <button class="btn" id="offlineBtnMobile" data-i18n="offlineBtn">⇩ 生成完全离线版</button>
-      </div>
-
-      <div class="setting-card">
-        <div class="setting-title" data-i18n="aboutTitle">关于</div>
-        <div class="setting-desc" data-i18n="aboutDesc">Rider–Waite–Smith · Pamela Colman Smith · 1909。此项目为个人前端学习项目。</div>
-      </div>
-    </section>
-  </main>
-
-  <div class="source-note">Rider–Waite–Smith · Pamela Colman Smith · 1909</div>
-</div>
-
-<nav class="mobile-nav">
-  <button class="nav-btn active" data-page="draw"><span class="ico">☾</span><span data-i18n="navDraw">抽牌</span></button>
-  <button class="nav-btn" data-page="deck"><span class="ico">✦</span><span data-i18n="navDeck">牌堆</span></button>
-  <button class="nav-btn" data-page="settings"><span class="ico">⚙</span><span data-i18n="navSettings">设置</span></button>
-</nav>
-
-<div id="toast" class="toast"></div>
+<div class="desktop-wrap">
+<div class="app" id="app">
+<header class="topbar"><div class="brand"><div class="brand-icon">☾</div><div class="brand-name">Lunar Arcana<small>TAROT APP</small></div></div><button class="icon-btn" id="quickLang">🌐</button></header>
+<main class="viewport" id="viewport">
+<section class="screen active" id="homeScreen"></section><section class="screen" id="spreadsScreen"></section><section class="screen" id="cardsScreen"></section><section class="screen" id="settingsScreen"></section><section class="screen reading-screen" id="readingScreen"></section><section class="screen" id="cardDetailScreen"></section>
+</main>
+<nav class="bottom-nav" id="bottomNav"><button class="nav-btn active" data-screen="home"><span class="nav-icon">☾</span><span data-nav="home"></span></button><button class="nav-btn" data-screen="spreads"><span class="nav-icon">✦</span><span data-nav="spreads"></span></button><button class="nav-btn" data-screen="cards"><span class="nav-icon">◇</span><span data-nav="cards"></span></button><button class="nav-btn" data-screen="settings"><span class="nav-icon">⚙</span><span data-nav="settings"></span></button></nav>
+</div></div>
 
 <script>
-const I18N={
- zh:{
-  title:"三张塔罗",
-  heroText:"使用 Rider–Waite–Smith 原版牌面。每次刷新或重新洗牌时，完整 78 张牌都会重新随机排列；你输入的三个数字只代表这一轮牌堆的位置。",
-  roundLabel:"本轮牌序",roundHint:"重新洗牌后，数字对应关系与正逆位都会变化。",
-  offlineBtn:"⇩ 生成完全离线版",reshuffleBtn:"↻ 重新洗牌",
-  first:"FIRST",second:"SECOND",third:"THIRD",
-  tip:"抽牌前牌面不会显示。点击翻牌后，三张牌会依次揭示。",
-  drawBtn:"翻开这三张牌",randomBtn:"随机三个数字",spreadTitle:"THE THREE CARD SPREAD",
-  initialResult:"牌已洗好。请输入三个数字。",
-  deckTitle:"本轮牌堆",deckSub:"这里显示本轮 1–78 的完整随机对应关系。重新洗牌后会全部改变。",
-  settingsTitle:"设置",settingsSub:"语言、安装和离线功能都放在这里。",
-  languageTitle:"语言",languageDesc:"切换界面语言。你的选择会保存在这台设备上。",
-  installTitle:"添加到手机主屏幕",installDesc:"部署到 GitHub Pages 后，可以像 App 一样从手机主屏幕打开。",
-  installBtn:"安装 / 添加到主屏幕",
-  offlineTitle:"完全离线版",offlineDesc:"下载一个把 78 张牌面全部嵌入其中的独立 HTML 文件。",
-  aboutTitle:"关于",aboutDesc:"Rider–Waite–Smith · Pamela Colman Smith · 1909。此项目为个人前端学习项目。",
-  navDraw:"抽牌",navDeck:"牌堆",navSettings:"设置",
-  hidden:"尚未揭示",hiddenSub:"这张牌仍然隐藏。",hiddenHelp:"输入三个数字后再翻牌。",
-  card:"第",position:"位置",upright:"正位",reversed:"逆位",
-  invalid:"请输入三个 1–78 之间的整数",reshuffled:"牌已经重新洗好。",
-  installIOS:"iPhone / iPad：请用 Safari 打开 → 分享 → 添加到主屏幕。",
-  installUnavailable:"请先把网页部署到 GitHub Pages，再从手机浏览器添加到主屏幕。",
-  alreadyInstalled:"当前已经以 App 模式打开。",
-  offlineStart:"正在准备离线版",offlineDone:"完成：离线版已生成",offlineFail:"生成失败，请检查网络后重试",
-  loading:"正在载入 Rider–Waite–Smith 原版牌面…",
-  imageFail:"牌面暂时载入失败，请检查网络。",
-  meaningPrefix:"关键词：",revPrefix:"阻滞、内化、延迟；"
- },
- en:{
-  title:"Three-Card Tarot",
-  heroText:"Using the original Rider–Waite–Smith artwork. The full 78-card deck is reshuffled whenever you refresh or reshuffle; your three numbers represent positions in the current deck.",
-  roundLabel:"Current shuffle",roundHint:"Reshuffling changes the number mapping and upright/reversed orientations.",
-  offlineBtn:"⇩ Generate offline version",reshuffleBtn:"↻ Reshuffle",
-  first:"FIRST",second:"SECOND",third:"THIRD",
-  tip:"Cards stay hidden until you reveal them. The three cards flip over one by one.",
-  drawBtn:"Reveal three cards",randomBtn:"Random three numbers",spreadTitle:"THE THREE CARD SPREAD",
-  initialResult:"The deck is ready. Enter three numbers.",
-  deckTitle:"Current Deck",deckSub:"This shows the complete 1–78 mapping for the current shuffle. It changes after every reshuffle.",
-  settingsTitle:"Settings",settingsSub:"Language, installation and offline options.",
-  languageTitle:"Language",languageDesc:"Switch the interface language. Your choice is saved on this device.",
-  installTitle:"Add to Home Screen",installDesc:"After deployment on GitHub Pages, you can launch it from your phone like an app.",
-  installBtn:"Install / Add to Home Screen",
-  offlineTitle:"Fully Offline Version",offlineDesc:"Download a standalone HTML file with all 78 card images embedded.",
-  aboutTitle:"About",aboutDesc:"Rider–Waite–Smith · Pamela Colman Smith · 1909. A personal front-end learning project.",
-  navDraw:"Draw",navDeck:"Deck",navSettings:"Settings",
-  hidden:"Hidden",hiddenSub:"This card remains hidden.",hiddenHelp:"Enter three numbers and reveal the cards.",
-  card:"CARD",position:"POSITION",upright:"Upright",reversed:"Reversed",
-  invalid:"Enter three integers between 1 and 78.",reshuffled:"The deck has been reshuffled.",
-  installIOS:"iPhone / iPad: open in Safari → Share → Add to Home Screen.",
-  installUnavailable:"Deploy the site to GitHub Pages first, then add it from your mobile browser.",
-  alreadyInstalled:"The app is already running in standalone mode.",
-  offlineStart:"Preparing offline version",offlineDone:"Done: offline version generated",offlineFail:"Could not generate the offline version. Check your connection and try again.",
-  loading:"Loading original Rider–Waite–Smith artwork…",
-  imageFail:"Card artwork could not be loaded. Check your connection.",
-  meaningPrefix:"Keywords: ",revPrefix:"Blocked, internalised, delayed; "
- }
+const LOCALES=["zh-CN","zh-TW","en","ja","ko","es","fr","de"];
+const LANG_LABELS={"zh-CN":"简体中文","zh-TW":"繁體中文","en":"English","ja":"日本語","ko":"한국어","es":"Español","fr":"Français","de":"Deutsch"};
+const EN={home:"Home",spreads:"Spreads",cards:"Cards",settings:"Settings",homeQ:"What would you like to explore today?",homeSub:"Choose a theme or spread first, then move into the reading flow.",daily:"Daily Card",dailyDesc:"Use one card to reflect on today's theme, energy and reminder.",start:"Start reading",explore:"Explore",love:"Love",career:"Career",self:"Self",study:"Study",recent:"Recent readings",noRecent:"No readings yet. Finished spreads will appear here.",viewAll:"View all",spreadsTitle:"Spread Library",spreadsSub:"The number of cards matters less than what each position represents.",all:"All",popular:"Popular",cardsCount:"cards",minutes:"min",cardsTitle:"Tarot Library",cardsSub:"Browse the complete 78-card Rider–Waite–Smith deck.",search:"Search cards…",major:"Major Arcana",minor:"Minor Arcana",settingsTitle:"Settings",settingsSub:"Language, installation, data and offline options.",language:"Language",languageDesc:"Change the app interface, card names, spreads and position labels.",install:"Add to Home Screen",installDesc:"Once deployed on GitHub Pages, launch it from your phone like an app.",installBtn:"Install / Add to Home Screen",offline:"Fully Offline Version",offlineDesc:"Embed all 78 card images into one standalone HTML file.",offlineBtn:"Generate offline version",clearHistory:"Clear reading history",clearHistoryDesc:"Only removes reading history stored in this browser.",clearBtn:"Clear history",about:"About",aboutText:"A personal front-end learning project. Spread positions are app-defined templates, not universal tarot rules.",spreadPositions:"Spread positions",questionPh:"Example: How might my relationship develop over the next three months?",shuffle:"Current shuffle",reshuffle:"Reshuffle",numbersHint:"Enter unique numbers from 1–78, or let the deck choose them.",random:"Random numbers",reveal:"Reveal cards",invalidNums:"Enter the correct number of unique integers from 1 to 78.",upright:"Upright",reversed:"Reversed",keywords:"Keywords",positionReading:"In this position",summary:"Reading summary",summaryText:"Reading each card together with its position is more meaningful than reading card keywords alone.",saved:"This reading has been saved locally.",reshuffled:"The deck has been reshuffled.",noResults:"No matching cards found.",orientationRev:"The energy may feel internalised, blocked or delayed.",note:"Note: tarot readers may define spreads differently; these are Lunar Arcana templates.",installIOS:"iPhone / iPad: Safari → Share → Add to Home Screen.",installUnavailable:"Deploy over HTTPS before installing.",cleared:"Reading history cleared.",offlineStart:"Preparing offline version",offlineDone:"Offline version generated",offlineFail:"Could not generate the offline version.",cardMeaning:"Card theme"};
+const UI={en:EN,
+"zh-CN":{...EN,home:"首页",spreads:"牌阵",cards:"牌库",settings:"设置",homeQ:"今天想探索什么？",homeSub:"先选择主题或牌阵，再进入真正的抽牌流程。",daily:"每日一牌",dailyDesc:"用一张牌查看今天的主题、能量与提醒。",start:"开始抽牌",explore:"探索主题",love:"爱情",career:"事业",self:"自我探索",study:"学业",recent:"最近占卜",noRecent:"还没有占卜记录。完成一次牌阵后会显示在这里。",viewAll:"查看全部",spreadsTitle:"牌阵库",spreadsSub:"牌数不是重点，真正重要的是每一张牌所在的位置代表什么。",all:"全部",popular:"热门",cardsCount:"张牌",minutes:"分钟",cardsTitle:"塔罗牌库",cardsSub:"查看完整 78 张 Rider–Waite–Smith 牌面。",search:"搜索牌名…",major:"大阿尔卡那",minor:"小阿尔卡那",settingsTitle:"设置",settingsSub:"语言、安装、数据与离线设置。",language:"语言",languageDesc:"切换整个应用的界面、牌名、牌阵和位置说明。",install:"添加到主屏幕",installDesc:"部署到 GitHub Pages 后，可像 App 一样从手机桌面打开。",installBtn:"安装 / 添加到主屏幕",offline:"完全离线版",offlineDesc:"把 78 张牌面嵌入一个独立 HTML 文件。",offlineBtn:"生成离线版",clearHistory:"清除占卜记录",clearHistoryDesc:"只清除保存在本机浏览器里的占卜历史。",clearBtn:"清除记录",about:"关于",aboutText:"个人前端学习项目。牌阵位置为本应用采用的模板，不代表所有塔罗体系只有一种标准定义。",spreadPositions:"牌阵位置",questionPh:"例如：未来三个月的感情发展如何？",shuffle:"本轮洗牌",reshuffle:"重新洗牌",numbersHint:"输入不重复的 1–78 数字，或让牌堆随机选择。",random:"随机数字",reveal:"翻开牌面",invalidNums:"请输入正确数量、且不重复的 1–78 整数。",upright:"正位",reversed:"逆位",keywords:"关键词",positionReading:"结合这个位置",summary:"本次占卜",summaryText:"把每一张牌与它所在的位置一起阅读，会比单独看牌义更有意义。",saved:"本次占卜已保存在本机。",reshuffled:"已经重新洗牌。",noResults:"没有找到对应的牌。",orientationRev:"能量可能更内化、受阻或延迟。",note:"提示：不同塔罗师可能使用不同牌阵定义；这里采用的是 Lunar Arcana 的模板。",cleared:"记录已清除。",cardMeaning:"牌义主题"},
+"zh-TW":{...EN,home:"首頁",spreads:"牌陣",cards:"牌庫",settings:"設定",homeQ:"今天想探索什麼？",homeSub:"先選擇主題或牌陣，再進入真正的抽牌流程。",daily:"每日一牌",dailyDesc:"用一張牌查看今天的主題、能量與提醒。",start:"開始抽牌",explore:"探索主題",love:"愛情",career:"事業",self:"自我探索",study:"學業",recent:"最近占卜",noRecent:"還沒有占卜紀錄。",viewAll:"查看全部",spreadsTitle:"牌陣庫",spreadsSub:"真正重要的是每一張牌所在的位置代表什麼。",all:"全部",popular:"熱門",cardsCount:"張牌",minutes:"分鐘",cardsTitle:"塔羅牌庫",cardsSub:"查看完整 78 張 Rider–Waite–Smith 牌面。",search:"搜尋牌名…",major:"大阿爾卡那",minor:"小阿爾卡那",settingsTitle:"設定",settingsSub:"語言、安裝、資料與離線設定。",language:"語言",languageDesc:"切換整個應用的介面、牌名、牌陣和位置說明。",spreadPositions:"牌陣位置",questionPh:"例如：未來三個月的感情發展如何？",shuffle:"本輪洗牌",reshuffle:"重新洗牌",numbersHint:"輸入不重複的 1–78 數字，或讓牌堆隨機選擇。",random:"隨機數字",reveal:"翻開牌面",upright:"正位",reversed:"逆位",keywords:"關鍵詞",positionReading:"結合這個位置",summary:"本次占卜",saved:"本次占卜已保存在本機。",cardMeaning:"牌義主題"},
+ja:{...EN,home:"ホーム",spreads:"スプレッド",cards:"カード",settings:"設定",homeQ:"今日は何を見つめたいですか？",homeSub:"テーマやスプレッドを選んでからリーディングを始めます。",daily:"今日の一枚",start:"リーディング開始",explore:"テーマ",love:"恋愛",career:"仕事",self:"自己探求",study:"学業",recent:"最近のリーディング",spreadsTitle:"スプレッド一覧",all:"すべて",popular:"人気",cardsCount:"枚",minutes:"分",cardsTitle:"タロット一覧",search:"カードを検索…",settingsTitle:"設定",language:"言語",spreadPositions:"各ポジション",shuffle:"今回のシャッフル",reshuffle:"再シャッフル",random:"ランダム",reveal:"カードを開く",upright:"正位置",reversed:"逆位置",keywords:"キーワード",positionReading:"この位置では",summary:"リーディングまとめ",cardMeaning:"カードのテーマ"},
+ko:{...EN,home:"홈",spreads:"스프레드",cards:"카드",settings:"설정",homeQ:"오늘은 무엇을 살펴보고 싶나요?",homeSub:"주제나 스프레드를 고른 뒤 리딩을 시작합니다.",daily:"오늘의 한 장",start:"리딩 시작",explore:"주제",love:"연애",career:"커리어",self:"자기 탐색",study:"학업",recent:"최근 리딩",spreadsTitle:"스프레드 라이브러리",all:"전체",popular:"인기",cardsCount:"장",minutes:"분",cardsTitle:"타로 카드 라이브러리",search:"카드 검색…",settingsTitle:"설정",language:"언어",spreadPositions:"스프레드 위치",shuffle:"현재 셔플",reshuffle:"다시 섞기",random:"랜덤 숫자",reveal:"카드 공개",upright:"정방향",reversed:"역방향",keywords:"키워드",positionReading:"이 위치에서는",summary:"리딩 요약",cardMeaning:"카드 테마"},
+es:{...EN,home:"Inicio",spreads:"Tiradas",cards:"Cartas",settings:"Ajustes",homeQ:"¿Qué quieres explorar hoy?",daily:"Carta del día",start:"Empezar lectura",explore:"Explorar",love:"Amor",career:"Carrera",self:"Autoconocimiento",study:"Estudios",recent:"Lecturas recientes",spreadsTitle:"Biblioteca de tiradas",all:"Todas",popular:"Popular",cardsCount:"cartas",minutes:"min",cardsTitle:"Biblioteca de Tarot",search:"Buscar cartas…",settingsTitle:"Ajustes",language:"Idioma",spreadPositions:"Posiciones",shuffle:"Barajado actual",reshuffle:"Volver a barajar",random:"Números al azar",reveal:"Revelar cartas",upright:"Derecha",reversed:"Invertida",keywords:"Palabras clave",positionReading:"En esta posición",summary:"Resumen",cardMeaning:"Tema de la carta"},
+fr:{...EN,home:"Accueil",spreads:"Tirages",cards:"Cartes",settings:"Réglages",homeQ:"Que souhaitez-vous explorer aujourd’hui ?",daily:"Carte du jour",start:"Commencer",explore:"Explorer",love:"Amour",career:"Carrière",self:"Introspection",study:"Études",recent:"Lectures récentes",spreadsTitle:"Bibliothèque de tirages",all:"Tous",popular:"Populaire",cardsCount:"cartes",minutes:"min",cardsTitle:"Bibliothèque du Tarot",search:"Rechercher une carte…",settingsTitle:"Réglages",language:"Langue",spreadPositions:"Positions",shuffle:"Mélange actuel",reshuffle:"Remélanger",random:"Nombres aléatoires",reveal:"Révéler les cartes",upright:"À l’endroit",reversed:"Renversée",keywords:"Mots-clés",positionReading:"Dans cette position",summary:"Résumé",cardMeaning:"Thème de la carte"},
+de:{...EN,home:"Start",spreads:"Legungen",cards:"Karten",settings:"Einstellungen",homeQ:"Was möchtest du heute erkunden?",daily:"Tageskarte",start:"Legung starten",explore:"Themen",love:"Liebe",career:"Beruf",self:"Selbstreflexion",study:"Studium",recent:"Letzte Legungen",spreadsTitle:"Legungsbibliothek",all:"Alle",popular:"Beliebt",cardsCount:"Karten",minutes:"Min.",cardsTitle:"Tarot-Kartenbibliothek",search:"Karten suchen…",settingsTitle:"Einstellungen",language:"Sprache",spreadPositions:"Positionen",shuffle:"Aktuelle Mischung",reshuffle:"Neu mischen",random:"Zufallszahlen",reveal:"Karten aufdecken",upright:"Aufrecht",reversed:"Umgekehrt",keywords:"Schlüsselwörter",positionReading:"In dieser Position",summary:"Zusammenfassung",cardMeaning:"Kartenthema"}
 };
+let locale=localStorage.getItem("la-locale")||"zh-CN";if(!LOCALES.includes(locale))locale="zh-CN";const T=k=>UI[locale]?.[k]||EN[k]||k;
 
-Object.assign(I18N.zh,{
- title:"塔罗抽牌",
- heroText:"选择一张、三张或五张牌。每次刷新或重新洗牌时，完整 78 张牌都会重新随机排列；你输入的数字只代表这一轮牌堆的位置。",
- chooseSpread:"选择抽牌数量",oneCard:"单张牌",threeCards:"三张牌",fiveCards:"五张牌",
- tip1:"输入一个 1–78 的数字，或让牌堆随机生成。",
- tip3:"输入三个 1–78 的数字，或让牌堆随机生成。",
- tip5:"输入五个 1–78 的数字，或让牌堆随机生成。",
- drawBtn:"翻开所选牌",randomBtn:"随机数字",
- spreadTitle1:"ONE CARD DRAW",spreadTitle3:"THREE CARD SPREAD",spreadTitle5:"FIVE CARD SPREAD",
- initialResult:"牌已洗好。请选择抽牌数量并输入数字。",
- inputLabel:"数字",invalid:"请输入正确数量的 1–78 整数，并避免重复。",
- hiddenHelp:"输入数字后再翻牌。"
-});
-Object.assign(I18N.en,{
- title:"Tarot Draw",
- heroText:"Choose one, three, or five cards. The full 78-card deck is reshuffled whenever you refresh or reshuffle; your numbers represent positions in the current deck.",
- chooseSpread:"Choose spread size",oneCard:"One card",threeCards:"Three cards",fiveCards:"Five cards",
- tip1:"Enter one number from 1–78, or let the deck choose it.",
- tip3:"Enter three numbers from 1–78, or let the deck choose them.",
- tip5:"Enter five numbers from 1–78, or let the deck choose them.",
- drawBtn:"Reveal selected cards",randomBtn:"Random numbers",
- spreadTitle1:"ONE CARD DRAW",spreadTitle3:"THREE CARD SPREAD",spreadTitle5:"FIVE CARD SPREAD",
- initialResult:"The deck is ready. Choose a spread size and enter your numbers.",
- inputLabel:"NUMBER",invalid:"Enter the correct number of unique integers between 1 and 78.",
- hiddenHelp:"Enter the number(s) and reveal the cards."
-});
+const MAJOR={"zh-CN":["愚者","魔术师","女祭司","皇后","皇帝","教皇","恋人","战车","力量","隐者","命运之轮","正义","倒吊人","死神","节制","恶魔","高塔","星星","月亮","太阳","审判","世界"],"zh-TW":["愚者","魔術師","女祭司","皇后","皇帝","教皇","戀人","戰車","力量","隱者","命運之輪","正義","倒吊人","死神","節制","惡魔","高塔","星星","月亮","太陽","審判","世界"],en:["The Fool","The Magician","The High Priestess","The Empress","The Emperor","The Hierophant","The Lovers","The Chariot","Strength","The Hermit","Wheel of Fortune","Justice","The Hanged Man","Death","Temperance","The Devil","The Tower","The Star","The Moon","The Sun","Judgement","The World"],ja:["愚者","魔術師","女教皇","女帝","皇帝","教皇","恋人","戦車","力","隠者","運命の輪","正義","吊るされた男","死神","節制","悪魔","塔","星","月","太陽","審判","世界"],ko:["바보","마법사","여사제","여황제","황제","교황","연인","전차","힘","은둔자","운명의 수레바퀴","정의","매달린 사람","죽음","절제","악마","탑","별","달","태양","심판","세계"],es:["El Loco","El Mago","La Sacerdotisa","La Emperatriz","El Emperador","El Hierofante","Los Enamorados","El Carro","La Fuerza","El Ermitaño","La Rueda de la Fortuna","La Justicia","El Colgado","La Muerte","La Templanza","El Diablo","La Torre","La Estrella","La Luna","El Sol","El Juicio","El Mundo"],fr:["Le Mat","Le Magicien","La Grande Prêtresse","L’Impératrice","L’Empereur","Le Hiérophante","Les Amoureux","Le Chariot","La Force","L’Ermite","La Roue de Fortune","La Justice","Le Pendu","La Mort","Tempérance","Le Diable","La Tour","L’Étoile","La Lune","Le Soleil","Le Jugement","Le Monde"],de:["Der Narr","Der Magier","Die Hohepriesterin","Die Herrscherin","Der Herrscher","Der Hierophant","Die Liebenden","Der Wagen","Die Kraft","Der Eremit","Das Rad des Schicksals","Die Gerechtigkeit","Der Gehängte","Der Tod","Die Mäßigkeit","Der Teufel","Der Turm","Der Stern","Der Mond","Die Sonne","Das Gericht","Die Welt"]};
+const SUITS={"zh-CN":["权杖","圣杯","宝剑","星币"],"zh-TW":["權杖","聖杯","寶劍","星幣"],en:["Wands","Cups","Swords","Pentacles"],ja:["ワンド","カップ","ソード","ペンタクル"],ko:["완드","컵","소드","펜타클"],es:["Bastos","Copas","Espadas","Oros"],fr:["Bâtons","Coupes","Épées","Deniers"],de:["Stäbe","Kelche","Schwerter","Münzen"]};
+const RANKS={"zh-CN":["王牌","二","三","四","五","六","七","八","九","十","侍从","骑士","皇后","国王"],"zh-TW":["王牌","二","三","四","五","六","七","八","九","十","侍從","騎士","皇后","國王"],en:["Ace","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Page","Knight","Queen","King"],ja:["エース","2","3","4","5","6","7","8","9","10","ペイジ","ナイト","クイーン","キング"],ko:["에이스","2","3","4","5","6","7","8","9","10","페이지","나이트","퀸","킹"],es:["As","Dos","Tres","Cuatro","Cinco","Seis","Siete","Ocho","Nueve","Diez","Sota","Caballero","Reina","Rey"],fr:["As","Deux","Trois","Quatre","Cinq","Six","Sept","Huit","Neuf","Dix","Valet","Cavalier","Reine","Roi"],de:["Ass","Zwei","Drei","Vier","Fünf","Sechs","Sieben","Acht","Neun","Zehn","Bube","Ritter","Königin","König"]};
+const majorCodes=Array.from({length:22},(_,i)=>"ar"+String(i).padStart(2,"0")),rankCodes=["ac","02","03","04","05","06","07","08","09","10","pa","kn","qu","ki"],suitCodes=["wa","cu","sw","pe"];
+const deck=[...majorCodes.map((code,i)=>({id:i+1,code,type:"major",major:i})),...suitCodes.flatMap((s,si)=>rankCodes.map((r,ri)=>({id:23+si*14+ri,code:s+r,type:"minor",suit:si,rank:ri})))];
+function cardName(c,loc=locale){if(c.type==="major")return MAJOR[loc][c.major];const r=RANKS[loc][c.rank],s=SUITS[loc][c.suit];if(["zh-CN","zh-TW","ko"].includes(loc))return s+r;if(loc==="ja")return `${s}の${r}`;if(loc==="en")return `${r} of ${s}`;if(["es","fr"].includes(loc))return `${r} de ${s}`;return `${r} der ${s}`}
+function cardEnglish(c){return cardName(c,"en")}
+const MKW=["beginnings, freedom, adventure","action, creation, resources","intuition, mystery, stillness","abundance, nurture, creativity","order, responsibility, control","tradition, learning, belief","relationships, choice, values","willpower, movement, victory","courage, restraint, inner strength","solitude, search, reflection","change, cycles, opportunity","fairness, cause and effect, judgement","pause, perspective, surrender","ending, transformation, rebirth","balance, integration, patience","attachment, desire, fixation","upheaval, shock, truth","hope, healing, guidance","uncertainty, imagination, subconscious","joy, clarity, success","awakening, calling, review","completion, wholeness, integration"];
+const MKWZH=["开始、自由、冒险","行动、创造、资源","直觉、秘密、静观","丰盛、滋养、创造","秩序、责任、掌控","传统、学习、信念","关系、选择、价值","意志、推进、胜利","勇气、自控、内在力量","独处、寻找、内省","变化、周期、机会","公平、因果、判断","暂停、换位、放下","结束、转化、重生","平衡、整合、耐心","束缚、欲望、执念","突变、冲击、真相","希望、疗愈、指引","未知、想象、潜意识","喜悦、清晰、成功","觉醒、召唤、复盘","完成、圆满、整合"];
+function cardKeywords(c){if(c.type==="major")return ["zh-CN","zh-TW"].includes(locale)?MKWZH[c.major]:MKW[c.major];return `${SUITS[locale][c.suit]} · ${RANKS[locale][c.rank]}`}
 
-let spreadCount=Number(localStorage.getItem("tarot-spread-count")||3);
-if(![1,3,5].includes(spreadCount))spreadCount=3;
-
-let lang=localStorage.getItem("tarot-language")||"zh";
-function t(k){return I18N[lang][k]||k}
-function applyLanguage(next){
-  lang=next;
-  localStorage.setItem("tarot-language",lang);
-  document.documentElement.lang=lang==="zh"?"zh-CN":"en";
-  document.querySelectorAll("[data-i18n]").forEach(el=>{
-    const key=el.dataset.i18n;if(I18N[lang][key])el.textContent=I18N[lang][key];
-  });
-  document.querySelectorAll(".lang-choice").forEach(b=>b.classList.toggle("active",b.dataset.lang===lang));
-  document.getElementById("langQuick").textContent=lang==="zh"?"EN":"中";
-  renderInputs();
-  updateSpreadCopy();
-  renderDeckGrid();
-  if(currentCards) renderCurrentReading(false);
-  else renderEmpty();
-}
-
-const EMBEDDED_IMAGES=JSON.parse(document.getElementById("embedded-images").textContent||"{}");
-const PRIMARY_BASE="https://raw.githubusercontent.com/seven102161/elaine-tarot-cards/main/cards/";
-const FALLBACK_BASE="https://petaloverflow.github.io/tarot-api/cards/";
-
-const majors=[
-["ar00","愚者","The Fool","开始、自由、冒险","Beginnings, freedom, adventure"],
-["ar01","魔术师","The Magician","行动、创造、资源","Action, creation, resourcefulness"],
-["ar02","女祭司","The High Priestess","直觉、潜意识、静观","Intuition, mystery, inner knowing"],
-["ar03","皇后","The Empress","丰盛、滋养、创造力","Abundance, nurture, creativity"],
-["ar04","皇帝","The Emperor","秩序、责任、掌控","Order, responsibility, authority"],
-["ar05","教皇","The Hierophant","传统、学习、信念","Tradition, learning, beliefs"],
-["ar06","恋人","The Lovers","关系、选择、价值观","Relationships, choices, values"],
-["ar07","战车","The Chariot","意志、推进、胜利","Willpower, progress, victory"],
-["ar08","力量","Strength","勇气、自控、内在力量","Courage, restraint, inner strength"],
-["ar09","隐者","The Hermit","独处、寻找、内省","Solitude, searching, reflection"],
-["ar10","命运之轮","Wheel of Fortune","变化、周期、机会","Change, cycles, opportunity"],
-["ar11","正义","Justice","公平、因果、判断","Fairness, cause and effect, judgement"],
-["ar12","倒吊人","The Hanged Man","暂停、换位、放下","Pause, perspective, surrender"],
-["ar13","死神","Death","结束、转化、重生","Endings, transformation, renewal"],
-["ar14","节制","Temperance","平衡、整合、耐心","Balance, integration, patience"],
-["ar15","恶魔","The Devil","束缚、欲望、执念","Attachment, desire, fixation"],
-["ar16","高塔","The Tower","突变、冲击、真相","Upheaval, shock, truth"],
-["ar17","星星","The Star","希望、疗愈、指引","Hope, healing, guidance"],
-["ar18","月亮","The Moon","不安、想象、未知","Uncertainty, imagination, the unknown"],
-["ar19","太阳","The Sun","喜悦、清晰、成功","Joy, clarity, success"],
-["ar20","审判","Judgement","觉醒、召唤、复盘","Awakening, calling, reflection"],
-["ar21","世界","The World","完成、圆满、整合","Completion, wholeness, integration"]
-];
-const ranks=[
-["ac","王牌","Ace"],["02","二","Two"],["03","三","Three"],["04","四","Four"],
-["05","五","Five"],["06","六","Six"],["07","七","Seven"],["08","八","Eight"],
-["09","九","Nine"],["10","十","Ten"],["pa","侍从","Page"],["kn","骑士","Knight"],
-["qu","皇后","Queen"],["ki","国王","King"]
-];
-const suits=[
-["wa","权杖","Wands","行动、热情、事业","Action, passion, work"],
-["cu","圣杯","Cups","感情、关系、直觉","Emotion, relationships, intuition"],
-["sw","宝剑","Swords","思考、冲突、决定","Thought, conflict, decisions"],
-["pe","星币","Pentacles","金钱、现实、稳定","Money, material life, stability"]
-];
-const nuancesZh=[
-"新机会、种子、开始","选择、平衡、互动","发展、合作、扩张","稳定、边界、守成",
-"挑战、摩擦、考验","恢复、调整、推进","评估、耐心、策略","行动、速度、突破",
-"积累、独立、成熟","结果、完成、责任","消息、学习、好奇","追求、冲劲、执行",
-"成熟、照顾、内在掌控","领导、稳定、外在掌控"
-];
-const nuancesEn=[
-"New opportunity, seed, beginning","Choice, balance, interaction","Growth, cooperation, expansion","Stability, boundaries, preservation",
-"Challenge, friction, test","Recovery, adjustment, progress","Assessment, patience, strategy","Action, speed, breakthrough",
-"Accumulation, independence, maturity","Outcome, completion, responsibility","News, learning, curiosity","Pursuit, drive, execution",
-"Maturity, care, inner command","Leadership, stability, outer command"
+function tx(zh,tw,en,ja,ko,es,fr,de){return {"zh-CN":zh,"zh-TW":tw,en,ja,ko,es,fr,de}}
+function p(title,hint){return {title,hint}}
+const SPREADS=[
+{id:"daily",cat:"popular",icon:"☀",count:1,min:2,name:tx("每日一牌","每日一牌","Daily Card","今日の一枚","오늘의 한 장","Carta del día","Carte du jour","Tageskarte"),desc:tx("今天的主题、能量与提醒。","今天的主題、能量與提醒。","Theme, energy and reminder for today.","今日のテーマ。","오늘의 주제.","Tema del día.","Thème du jour.","Thema des Tages."),positions:[p(tx("今日能量","今日能量","Today's energy","今日のエネルギー","오늘의 에너지","Energía de hoy","Énergie du jour","Heutige Energie"),tx("今天最值得留意的主题。","今天最值得留意的主題。","The theme most worth noticing today.","今日意識したいテーマ。","오늘 주목할 주제.","El tema a observar hoy.","Le thème à observer.","Das Thema für heute."))]},
+{id:"ppf",cat:"popular",icon:"◌",count:3,min:4,name:tx("过去 · 现在 · 未来","過去 · 現在 · 未來","Past · Present · Future","過去 · 現在 · 未来","과거 · 현재 · 미래","Pasado · Presente · Futuro","Passé · Présent · Futur","Vergangenheit · Gegenwart · Zukunft"),desc:tx("查看来源、当前状态与发展趋势。","查看來源、當前狀態與發展趨勢。","Explore origin, present state and future trend.","背景・現在・未来を見る。","배경, 현재, 미래를 봅니다.","Origen, presente y tendencia.","Origine, présent et tendance.","Ursprung, Gegenwart und Trend."),positions:[p(tx("过去","過去","Past","過去","과거","Pasado","Passé","Vergangenheit"),tx("形成当前局面的背景。","形成當前局面的背景。","Background shaping the present.","現在を形づくった背景。","현재를 만든 배경.","Antecedente del presente.","Contexte du présent.","Hintergrund der Gegenwart.")),p(tx("现在","現在","Present","現在","현재","Presente","Présent","Gegenwart"),tx("当下需要面对的核心。","當下需要面對的核心。","The core needing attention now.","今向き合う核心。","지금의 핵심.","El núcleo actual.","Le cœur actuel.","Der aktuelle Kern.")),p(tx("未来趋势","未來趨勢","Future trend","未来の傾向","미래 흐름","Tendencia futura","Tendance future","Zukünftige Tendenz"),tx("当前路径继续时的可能发展。","當前路徑繼續時的可能發展。","A likely direction if the current pattern continues.","今の流れの先。","현재 흐름의 가능성.","Dirección probable.","Direction probable.","Wahrscheinliche Richtung."))]},
+{id:"relationship",cat:"love",icon:"♡",count:3,min:4,name:tx("你 · 对方 · 关系","你 · 對方 · 關係","You · Them · Relationship","あなた · 相手 · 関係","나 · 상대 · 관계","Tú · La otra persona · Relación","Vous · L’autre · Relation","Du · Gegenüber · Beziehung"),desc:tx("分别观察双方状态与关系本身。","分別觀察雙方狀態與關係本身。","Look at each person and the relationship itself.","双方と関係を見る。","두 사람과 관계를 봅니다.","Observa a ambos y la relación.","Observe les deux et la relation.","Betrachtet beide und die Beziehung."),positions:[p(tx("你的状态","你的狀態","Your state","あなたの状態","나의 상태","Tu estado","Votre état","Dein Zustand"),tx("你的情绪、期待或需求。","你的情緒、期待或需求。","Your emotions, expectations or needs.","あなたの感情や期待。","나의 감정과 기대.","Tus emociones y expectativas.","Vos émotions et attentes.","Deine Gefühle und Erwartungen.")),p(tx("对方状态","對方狀態","Their state","相手の状態","상대의 상태","Estado de la otra persona","État de l’autre","Zustand des Gegenübers"),tx("对方在关系中的能量或态度。","對方在關係中的能量或態度。","Their energy or attitude in the relationship.","相手の態度。","상대의 태도.","Su energía o actitud.","Son énergie ou attitude.","Deren Haltung.")),p(tx("关系状态","關係狀態","Relationship","関係の状態","관계 상태","Relación","Relation","Beziehung"),tx("双方互动形成的整体状态。","雙方互動形成的整體狀態。","The pattern created by both sides.","双方が作る関係。","양쪽이 만든 관계.","El patrón entre ambos.","La dynamique entre les deux.","Das Muster zwischen beiden."))]},
+{id:"five",cat:"popular",icon:"✦",count:5,min:6,name:tx("五牌指引","五牌指引","Five-Card Guidance","5枚ガイダンス","5장 가이드","Guía de cinco cartas","Guidance à cinq cartes","Fünf-Karten-Wegweiser"),desc:tx("过去、挑战、核心、建议与趋势。","過去、挑戰、核心、建議與趨勢。","Past influence, challenge, core, advice and trend.","過去・課題・核心・助言・流れ。","과거·도전·핵심·조언·흐름.","Pasado, reto, núcleo, consejo y tendencia.","Passé, défi, cœur, conseil et tendance.","Vergangenheit, Herausforderung, Kern, Rat und Trend."),positions:["过去影响","当前挑战","核心状况","行动建议","发展趋势"].map((z,i)=>p(tx(z,z,["Past influence","Current challenge","Core situation","Action advice","Development trend"][i],["過去の影響","現在の課題","核心状況","行動の助言","今後の流れ"][i],["과거 영향","현재 도전","핵심 상황","행동 조언","발전 흐름"][i],["Influencia pasada","Reto actual","Situación central","Consejo de acción","Tendencia"][i],["Influence passée","Défi actuel","Situation centrale","Conseil d’action","Tendance"][i],["Vergangener Einfluss","Aktuelle Herausforderung","Kernsituation","Handlungsrat","Entwicklungstendenz"][i]),tx("这个位置的核心信息。","這個位置的核心信息。","The key message of this position.","この位置の中心メッセージ。","이 위치의 핵심 메시지.","Mensaje central de esta posición.","Message central de cette position.","Kernaussage dieser Position.")))},
+{id:"peach",cat:"love",icon:"❀",count:6,min:7,name:tx("桃花牌阵","桃花牌陣","Romance Opportunities","恋愛チャンス","연애 기회","Oportunidades amorosas","Opportunités amoureuses","Liebeschancen"),desc:tx("六张牌观察感情状态、桃花机会、潜在对象、阻碍、调整与近期趋势。","六張牌觀察感情狀態、桃花機會、潛在對象、阻礙、調整與近期趨勢。","Six cards for romantic state, opportunities, potential person, obstacles, adjustment and trend.","恋愛状態・出会い・相手像・障害・調整・流れ。","연애 상태, 기회, 상대, 장애물, 조정, 흐름.","Estado, oportunidades, persona, obstáculos, ajuste y tendencia.","État, opportunités, personne, obstacles, ajustement et tendance.","Lage, Chancen, Person, Hindernisse, Anpassung und Trend."),positions:["当前感情状态","桃花机会","潜在对象特质","感情阻碍","你需要调整","近期感情趋势"].map((z,i)=>p(tx(z,z,["Current romantic state","Romantic opportunities","Potential person's traits","Romantic obstacle","What to adjust","Near-term romantic trend"][i],["現在の恋愛状態","出会いの機会","相手の特徴","恋愛の障害","調整したいこと","近い恋愛の流れ"][i],["현재 연애 상태","연애 기회","잠재적 상대 특성","연애 장애물","조정할 점","가까운 연애 흐름"][i],["Estado amoroso","Oportunidades","Rasgos de la persona","Obstáculo","Qué ajustar","Tendencia cercana"][i],["État amoureux","Opportunités","Traits de la personne","Obstacle","Ce qu’il faut ajuster","Tendance proche"][i],["Aktuelle Liebessituation","Romantische Chancen","Eigenschaften der Person","Liebeshindernis","Was du anpassen kannst","Nahe Liebestendenz"][i]),tx("这个位置会提供一条独立的感情信息。","這個位置會提供一條獨立的感情信息。","This position provides a distinct relationship message.","この位置には独立した恋愛情報があります。","이 위치는 독립적인 연애 메시지를 제공합니다.","Esta posición aporta un mensaje amoroso específico.","Cette position apporte un message amoureux distinct.","Diese Position liefert eine eigene Liebesbotschaft.")))},
+{id:"career",cat:"career",icon:"♜",count:5,min:6,name:tx("事业五牌","事業五牌","Career Five-Card Spread","仕事5枚スプレッド","커리어 5장 스프레드","Tirada laboral de cinco cartas","Tirage carrière à cinq cartes","Fünf-Karten-Berufslegung"),desc:tx("现状、优势、阻碍、行动与发展趋势。","現狀、優勢、阻礙、行動與發展趨勢。","Situation, strength, obstacle, action and trend.","現状・強み・障害・行動・流れ。","현재, 강점, 장애물, 행동, 흐름.","Situación, fortaleza, obstáculo, acción y tendencia.","Situation, force, obstacle, action et tendance.","Situation, Stärke, Hindernis, Handlung und Trend."),positions:["事业现状","你的优势","主要阻碍","行动方向","发展趋势"].map((z,i)=>p(tx(z,z,["Career now","Your strength","Main obstacle","Action direction","Career trend"][i],["仕事の現状","あなたの強み","主な障害","行動の方向","今後の仕事運"][i],["현재 커리어","나의 강점","주요 장애물","행동 방향","커리어 흐름"][i],["Situación laboral","Tu fortaleza","Obstáculo principal","Dirección de acción","Tendencia laboral"][i],["Carrière actuelle","Votre force","Obstacle principal","Direction d’action","Tendance de carrière"][i],["Beruf aktuell","Deine Stärke","Haupthindernis","Handlungsrichtung","Berufliche Tendenz"][i]),tx("这个位置用于拆解事业问题。","這個位置用於拆解事業問題。","This position breaks down the career question.","仕事の問題を分解する位置。","커리어 문제를 나누어 보는 위치.","Esta posición desglosa la cuestión laboral.","Cette position décompose la question de carrière.","Diese Position zerlegt die Berufsfrage.")))}
 ];
 
-const deck=majors.map((m,i)=>({id:i+1,code:m[0],cn:m[1],en:m[2],meaningZh:m[3],meaningEn:m[4]}));
-let id=23;
-for(const s of suits){
-  ranks.forEach((r,i)=>deck.push({
-    id:id++,code:s[0]+r[0],cn:s[1]+r[1],en:`${r[2]} of ${s[2]}`,
-    meaningZh:`${s[3]}；${nuancesZh[i]}`,meaningEn:`${s[4]}; ${nuancesEn[i]}`
-  }));
-}
+const EMBEDDED=JSON.parse(document.getElementById("embedded-images").textContent||"{}"),PRIMARY="https://raw.githubusercontent.com/seven102161/elaine-tarot-cards/main/cards/",FALLBACK="https://petaloverflow.github.io/tarot-api/cards/";
+const imgSrc=c=>EMBEDDED[c]||PRIMARY+c+".jpg",imgFallback=c=>FALLBACK+c+".jpg";
+function imageError(img){if(!img.dataset.fallbackUsed){img.dataset.fallbackUsed="1";img.src=img.dataset.fallback}else img.style.opacity=".16"}
 
-let shuffled=[],currentCards=null,currentNums=null;
+let spreadFilter="all",currentSpread=null,shuffled=[],shuffleId="",deferredInstall=null;
+const viewport=document.getElementById("viewport"),bottomNav=document.getElementById("bottomNav"),localText=o=>o?.[locale]||o?.en||"";
+function showScreen(n,nav=true){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(n+"Screen").classList.add("active");bottomNav.style.display=nav?"grid":"none";document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.screen===n));viewport.scrollTop=0}
+function randomInt(max){const a=new Uint32Array(1);crypto.getRandomValues(a);return Math.floor(a[0]/4294967296*max)}
+function shuffleDeck(){shuffled=[...deck];for(let i=shuffled.length-1;i>0;i--){const j=randomInt(i+1);[shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]]}shuffled=shuffled.map(c=>({...c,orientation:randomInt(2)?"up":"rev"}));const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";shuffleId="";for(let i=0;i<6;i++)shuffleId+=chars[randomInt(chars.length)]}
+function getHistory(){try{return JSON.parse(localStorage.getItem("la-history")||"[]")}catch{return[]}}
 
-function randomInt(max){
-  if(window.crypto?.getRandomValues){
-    const a=new Uint32Array(1);crypto.getRandomValues(a);
-    return Math.floor(a[0]/4294967296*max);
-  }
-  return Math.floor(Math.random()*max);
-}
-function shuffle(arr){
-  const a=[...arr];
-  for(let i=a.length-1;i>0;i--){const j=randomInt(i+1);[a[i],a[j]]=[a[j],a[i]]}
-  return a;
-}
-function token(){
-  const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let s="";
-  for(let i=0;i<6;i++)s+=chars[randomInt(chars.length)];
-  return s;
-}
-function sourceFor(code){return EMBEDDED_IMAGES[code]||PRIMARY_BASE+code+".jpg"}
-function fallbackFor(code){return FALLBACK_BASE+code+".jpg"}
-function imgError(img){
-  if(!img.dataset.usedFallback){
-    img.dataset.usedFallback="1";img.src=img.dataset.fallback;
-  }else{
-    img.style.display="none";img.nextElementSibling.textContent=t("imageFail");
-  }
-}
-function orientationText(card){return card.orientation==="up"?t("upright"):t("reversed")}
-function cardDisplayName(card){return lang==="zh"?card.cn:card.en}
-function cardSubName(card){return lang==="zh"?card.en:card.cn}
-function cardMeaning(card){return lang==="zh"?card.meaningZh:card.meaningEn}
+function renderNav(){document.querySelectorAll("[data-nav]").forEach(e=>e.textContent=T(e.dataset.nav))}
+function renderHome(){const hist=getHistory().slice(0,3),e=document.getElementById("homeScreen");e.innerHTML=`<div class="hero"><div class="moon-orbit">☾</div><div class="hero-kicker">LUNAR ARCANA</div><h1>${T("homeQ")}</h1><p>${T("homeSub")}</p></div><div class="daily-card" onclick="startReading('daily')"><div class="daily-top"><span class="daily-badge">DAILY READING</span><span class="daily-symbol">☀</span></div><h3>${T("daily")}</h3><p>${T("dailyDesc")}</p><span class="daily-action">${T("start")} →</span></div><div class="section-row"><div class="section-title">${T("explore")}</div></div><div class="category-grid">${cat("love","♡")}${cat("career","♜")}${cat("self","☾")}${cat("study","✎")}</div><div class="section-row"><div class="section-title">${T("recent")}</div><button class="section-link" onclick="showSpreads()">${T("viewAll")}</button></div><div class="recent-list">${hist.length?hist.map(r=>`<div class="recent-item" onclick="startReading('${r.spreadId}')"><div class="recent-top"><div class="recent-title">${localText(SPREADS.find(s=>s.id===r.spreadId).name)}</div><div class="recent-date">${new Date(r.time).toLocaleDateString(locale)}</div></div><div class="recent-cards">${r.cards.join(" · ")}</div></div>`).join(""):`<div class="recent-empty">${T("noRecent")}</div>`}</div>`}
+function cat(c,i){return `<div class="category-card" onclick="openCategory('${c}')"><div class="cat-icon">${i}</div><div class="cat-name">${T(c)}</div><div class="cat-sub">${T("spreads")} →</div></div>`}
+function openCategory(c){spreadFilter=c;renderSpreads();showScreen("spreads")}function showSpreads(){spreadFilter="all";renderSpreads();showScreen("spreads")}
+function renderSpreads(){const e=document.getElementById("spreadsScreen"),cats=["all","popular","love","career","self"],list=SPREADS.filter(s=>spreadFilter==="all"||s.cat===spreadFilter);e.innerHTML=`<div class="page-head"><h2 class="page-title">${T("spreadsTitle")}</h2><div class="page-sub">${T("spreadsSub")}</div></div><div class="chips">${cats.map(c=>`<button class="chip ${spreadFilter===c?"active":""}" onclick="spreadFilter='${c}';renderSpreads()">${T(c)}</button>`).join("")}</div><div class="spread-list">${list.map(s=>`<div class="spread-card" onclick="startReading('${s.id}')"><div class="spread-mini">${s.icon}</div><div><h3>${localText(s.name)}</h3><p>${localText(s.desc)}</p><div class="spread-meta">${s.count} ${T("cardsCount")} · ${s.min} ${T("minutes")}</div></div><div class="chev">›</div></div>`).join("")}</div>`}
+function renderCards(q=""){const e=document.getElementById("cardsScreen"),term=q.toLowerCase().trim(),list=deck.filter(c=>!term||cardName(c).toLowerCase().includes(term)||cardEnglish(c).toLowerCase().includes(term));e.innerHTML=`<div class="page-head"><h2 class="page-title">${T("cardsTitle")}</h2><div class="page-sub">${T("cardsSub")}</div></div><input class="search" id="cardSearch" value="${q.replace(/"/g,"&quot;")}" placeholder="${T("search")}"><div class="card-library">${list.map(c=>`<div class="library-card" onclick="openCard(${c.id})"><div class="library-thumb"><img src="${imgSrc(c.code)}" data-fallback="${imgFallback(c.code)}" onerror="imageError(this)"></div><div class="library-name">${cardName(c)}</div><div class="library-sub">${c.type==="major"?T("major"):T("minor")}</div></div>`).join("")||`<div class="recent-empty" style="grid-column:1/-1">${T("noResults")}</div>`}</div>`;document.getElementById("cardSearch").oninput=x=>renderCards(x.target.value)}
+function openCard(id){const c=deck.find(x=>x.id===id),e=document.getElementById("cardDetailScreen");e.innerHTML=`<div class="reading-header"><button class="back-btn" id="cardBack">‹</button><div><div class="reading-title">${cardName(c)}</div><div class="reading-sub">${cardEnglish(c)}</div></div></div><div class="card-detail"><img src="${imgSrc(c.code)}" data-fallback="${imgFallback(c.code)}" onerror="imageError(this)"><h2>${cardName(c)}</h2><div class="minor">${cardEnglish(c)}</div><p><b>${T("cardMeaning")}：</b>${cardKeywords(c)}</p></div>`;showScreen("cardDetail",false);document.getElementById("cardBack").onclick=()=>{renderCards();showScreen("cards")}}
+function renderSettings(){const e=document.getElementById("settingsScreen");e.innerHTML=`<div class="page-head"><h2 class="page-title">${T("settingsTitle")}</h2><div class="page-sub">${T("settingsSub")}</div></div><div class="settings-group"><div class="setting"><div class="setting-label">${T("language")}</div><div class="setting-desc">${T("languageDesc")}</div><select class="select" id="langSel">${LOCALES.map(l=>`<option value="${l}" ${l===locale?"selected":""}>${LANG_LABELS[l]}</option>`).join("")}</select></div><div class="setting"><div class="setting-label">${T("install")}</div><div class="setting-desc">${T("installDesc")}</div><button class="btn primary" id="installBtn">${T("installBtn")}</button></div><div class="setting"><div class="setting-label">${T("offline")}</div><div class="setting-desc">${T("offlineDesc")}</div><button class="btn" id="offlineBtn">${T("offlineBtn")}</button></div><div class="setting"><div class="setting-label">${T("clearHistory")}</div><div class="setting-desc">${T("clearHistoryDesc")}</div><button class="btn danger" id="clearBtn">${T("clearBtn")}</button></div><div class="setting"><div class="setting-label">${T("about")}</div><div class="setting-desc" style="margin:0">${T("aboutText")}</div></div></div>`;document.getElementById("langSel").onchange=x=>setLocale(x.target.value);document.getElementById("installBtn").onclick=installApp;document.getElementById("offlineBtn").onclick=exportOffline;document.getElementById("clearBtn").onclick=()=>{localStorage.removeItem("la-history");renderHome();toast(T("cleared"))}}
+function setLocale(l){locale=l;localStorage.setItem("la-locale",l);document.documentElement.lang=l;renderAll();showScreen("settings")}
+function renderAll(){renderNav();renderHome();renderSpreads();renderCards();renderSettings()}
 
-function renderInputs(){
-  const box=document.getElementById("inputs");
-  if(!box)return;
-  box.className=`inputs count-${spreadCount}`;
-  box.innerHTML=Array.from({length:spreadCount},(_,i)=>`
-    <div class="inputbox">
-      <label>${t("inputLabel")} ${i+1}</label>
-      <input class="number-input" type="number" min="1" max="78" placeholder="1–78" aria-label="${t("inputLabel")} ${i+1}">
-    </div>
-  `).join("");
-  box.querySelectorAll("input").forEach(el=>el.addEventListener("keydown",e=>{if(e.key==="Enter")reveal()}));
-  if(currentNums&&currentNums.length===spreadCount){
-    box.querySelectorAll("input").forEach((el,i)=>el.value=currentNums[i]);
-  }
-}
-function updateSpreadCopy(){
-  document.querySelectorAll(".mode-btn").forEach(b=>b.classList.toggle("active",Number(b.dataset.count)===spreadCount));
-  document.getElementById("tip").textContent=t(`tip${spreadCount}`);
-  document.getElementById("spreadTitle").textContent=t(`spreadTitle${spreadCount}`);
-  document.getElementById("spread").dataset.count=String(spreadCount);
-}
-function setSpreadCount(count){
-  spreadCount=count;
-  localStorage.setItem("tarot-spread-count",String(count));
-  currentCards=null;currentNums=null;
-  renderInputs();updateSpreadCopy();renderEmpty();
-  document.getElementById("result").textContent=t("initialResult");
-}
+function startReading(id){currentSpread=SPREADS.find(s=>s.id===id);shuffleDeck();renderReading();showScreen("reading",false)}
+function renderReading(){const s=currentSpread,e=document.getElementById("readingScreen");e.innerHTML=`<div class="reading-header"><button class="back-btn" id="readBack">‹</button><div><div class="reading-title">${localText(s.name)}</div><div class="reading-sub">${s.count} ${T("cardsCount")} · ${s.min} ${T("minutes")}</div></div></div><div class="spread-note">${localText(s.desc)}<br><span style="color:#625968">${T("note")}</span></div><div class="section-row"><div class="section-title">${T("spreadPositions")}</div></div><div class="position-preview">${s.positions.map((x,i)=>`<div class="position-row"><div class="pos-num">${i+1}</div><div><div class="pos-title">${localText(x.title)}</div><div class="pos-hint">${localText(x.hint)}</div></div></div>`).join("")}</div><textarea class="question" placeholder="${T("questionPh")}"></textarea><div class="shuffle-bar"><div class="shuffle-id">${T("shuffle")} · <b>${shuffleId}</b></div><button class="small-btn" id="reshuffleBtn">${T("reshuffle")}</button></div><div class="page-sub" style="margin-bottom:8px">${T("numbersHint")}</div><div class="number-grid count-${s.count}">${Array.from({length:s.count},(_,i)=>`<input class="num-input" inputmode="numeric" type="number" min="1" max="78" placeholder="${i+1}">`).join("")}</div><div class="read-actions"><button class="btn" id="randomBtn">${T("random")}</button><button class="btn primary" id="revealBtn">${T("reveal")}</button></div><div id="results"></div>`;document.getElementById("readBack").onclick=()=>{renderSpreads();showScreen("spreads")};document.getElementById("reshuffleBtn").onclick=()=>{shuffleDeck();renderReading();toast(T("reshuffled"))};document.getElementById("randomBtn").onclick=fillRandom;document.getElementById("revealBtn").onclick=revealReading}
+function fillRandom(){const nums=[];while(nums.length<currentSpread.count){const n=randomInt(78)+1;if(!nums.includes(n))nums.push(n)}document.querySelectorAll(".num-input").forEach((x,i)=>x.value=nums[i])}
+function readNums(){const nums=[...document.querySelectorAll(".num-input")].map(x=>Number(x.value));if(nums.length!==currentSpread.count||nums.some(n=>!Number.isInteger(n)||n<1||n>78)||new Set(nums).size!==nums.length)return null;return nums}
+function revealReading(){const nums=readNums();if(!nums){toast(T("invalidNums"));return}const cs=nums.map(n=>shuffled[n-1]),e=document.getElementById("results");e.innerHTML=`<div class="reveal-list">${cs.map((c,i)=>readingCard(c,currentSpread.positions[i],i)).join("")}</div><div class="summary-card"><h3>${T("summary")}</h3><p>${T("summaryText")}</p></div><div class="disclaimer">${T("note")}</div>`;document.querySelectorAll(".tarot-frame").forEach((f,i)=>setTimeout(()=>f.classList.add("revealed"),220+i*300));const hist=getHistory();hist.unshift({time:Date.now(),spreadId:currentSpread.id,cards:cs.map(c=>cardName(c))});localStorage.setItem("la-history",JSON.stringify(hist.slice(0,20)));renderHome();toast(T("saved"))}
+function readingCard(c,x,i){const rev=c.orientation==="rev";return `<div class="reading-card"><div class="position-label">${i+1}. ${localText(x.title)}</div><div class="tarot-frame"><div class="flip-inner"><div class="face card-back"><div class="card-back-mark">☾</div></div><div class="face card-front"><img class="${rev?"reversed":""}" src="${imgSrc(c.code)}" data-fallback="${imgFallback(c.code)}" onerror="imageError(this)"></div></div></div><div class="card-info"><h3>${cardName(c)}</h3><div class="card-alt">${cardEnglish(c)}</div><div class="orientation">${rev?T("reversed"):T("upright")}</div><div class="keywords"><b>${T("keywords")}：</b>${cardKeywords(c)}</div><div class="position-reading"><b>${T("positionReading")}：</b>${interpret(c,x)}</div></div></div>`}
+function interpret(c,x){const title=localText(x.title),kw=cardKeywords(c);if(locale==="zh-CN")return `${title}中出现「${cardName(c)}」，可以重点观察${kw}。${c.orientation==="rev"?T("orientationRev"):"看看这股能量如何影响这个位置。"}`;if(locale==="zh-TW")return `${title}中出現「${cardName(c)}」，可以重點觀察${kw}。`;return `In ${title}, ${cardName(c)} highlights ${kw}. ${c.orientation==="rev"?T("orientationRev"):"Notice how this energy expresses itself through this position."}`}
 
-function emptySlot(i){
-  return `<article class="slot">
-    <div class="slot-head"><span>${t("card")} ${String(i+1).padStart(2,"0")}</span><span class="pos">${t("position")} —</span></div>
-    <div class="flip">
-      <div class="flip-inner">
-        <div class="face back"><div class="backmark"><div class="crescent">☾</div><div class="word">LUNAR ARCANA</div></div></div>
-        <div class="face front"><div class="image-shell"><div style="color:#776b83;font:12px Georgia,serif">${t("hidden")}</div></div></div>
-      </div>
-    </div>
-    <div class="meta"><div class="cn">${t("hidden")}</div><div class="en">${t("hiddenSub")}</div><div class="keys">${t("hiddenHelp")}</div></div>
-  </article>`;
-}
-function renderEmpty(){
-  const spread=document.getElementById("spread");
-  spread.dataset.count=String(spreadCount);
-  spread.innerHTML=Array.from({length:spreadCount},(_,i)=>emptySlot(i)).join("");
-}
-function renderDeckGrid(){
-  const grid=document.getElementById("deckGrid");
-  if(!grid)return;
-  grid.innerHTML=shuffled.map((c,i)=>
-    `<div class="deckitem"><b>${i+1}</b> · ${cardDisplayName(c)}<br>${orientationText(c)}</div>`).join("");
-}
-function reshuffle(){
-  shuffled=shuffle(deck).map(c=>({...c,orientation:randomInt(2)===0?"up":"rev"}));
-  document.getElementById("shuffleId").textContent=token();
-  renderEmpty();renderDeckGrid();
-  document.getElementById("result").textContent=t("reshuffled");
-  toast(t("reshuffled"));
-}
-function values(){
-  const v=[...document.querySelectorAll(".number-input")].map(x=>Number(x.value));
-  if(v.length!==spreadCount)return null;
-  if(v.some(n=>!Number.isInteger(n)||n<1||n>78))return null;
-  if(new Set(v).size!==v.length)return null;
-  return v;
-}
-function slot(card,pos,i){
-  const reversed=card.orientation==="rev"?" reversed":"";
-  const prefix=card.orientation==="rev"?t("revPrefix"):"";
-  return `<article class="slot">
-    <div class="slot-head"><span>${t("card")} ${String(i+1).padStart(2,"0")}</span><span class="pos">${t("position")} ${String(pos).padStart(2,"0")}</span></div>
-    <div class="flip" data-index="${i}">
-      <div class="flip-inner">
-        <div class="face back"><div class="backmark"><div class="crescent">☾</div><div class="word">LUNAR ARCANA</div></div></div>
-        <div class="face front">
-          <div class="image-shell">
-            <img class="card-img${reversed}"
-              src="${sourceFor(card.code)}"
-              data-fallback="${fallbackFor(card.code)}"
-              alt="${card.cn} / ${card.en}"
-              onerror="imgError(this)">
-            <div class="image-loading">${t("loading")}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="meta">
-      <div class="cn">${cardDisplayName(card)}</div>
-      <div class="en">${cardSubName(card)}</div>
-      <div class="keys">${t("meaningPrefix")}${prefix}${cardMeaning(card)}</div>
-      <div class="badge">${orientationText(card)}</div>
-    </div>
-  </article>`;
-}
-function renderCurrentReading(animate=true){
-  if(!currentCards||!currentNums){renderEmpty();return}
-  const spread=document.getElementById("spread");
-  spread.dataset.count=String(spreadCount);
-  spread.innerHTML=currentCards.map((c,i)=>slot(c,currentNums[i],i)).join("");
-  const flips=[...document.querySelectorAll(".flip")];
-  const step=spreadCount===5?260:430;
-  flips.forEach((el,i)=>{
-    el.addEventListener("click",()=>el.classList.toggle("revealed"));
-    if(animate)setTimeout(()=>el.classList.add("revealed"),300+i*step);
-    else el.classList.add("revealed");
-  });
-  document.getElementById("result").innerHTML=currentNums.map((n,i)=>
-    `${n} → <strong style="color:#e7cb8d">${cardDisplayName(currentCards[i])}</strong> (${orientationText(currentCards[i])})`
-  ).join("　✦　");
-}
-function reveal(){
-  const nums=values();
-  if(!nums){toast(t("invalid"));return}
-  currentNums=nums;currentCards=nums.map(n=>shuffled[n-1]);
-  renderCurrentReading(true);
-}
-function randomNumbers(){
-  const a=[];
-  while(a.length<spreadCount){const n=randomInt(78)+1;if(!a.includes(n))a.push(n)}
-  document.querySelectorAll(".number-input").forEach((el,i)=>el.value=a[i]);
-  reveal();
-}
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e});async function installApp(){if(deferredInstall){deferredInstall.prompt();await deferredInstall.userChoice;deferredInstall=null;return}toast(/iphone|ipad|ipod/i.test(navigator.userAgent)?T("installIOS"):T("installUnavailable"))}
+function blobToDataURL(blob){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(blob)})}
+async function exportOffline(){toast(T("offlineStart")+"…");const map={...EMBEDDED};try{const q=deck.filter(c=>!map[c.code]);let cursor=0;async function worker(){while(cursor<q.length){const c=q[cursor++];for(const u of [PRIMARY+c.code+".jpg",FALLBACK+c.code+".jpg"]){try{const r=await fetch(u,{mode:"cors"});if(!r.ok)throw 0;map[c.code]=await blobToDataURL(await r.blob());break}catch(e){}}if(!map[c.code])throw 0}}await Promise.all(Array.from({length:5},worker));const n=document.getElementById("embedded-images"),old=n.textContent;n.textContent=JSON.stringify(map);const data="<!doctype html>\n"+document.documentElement.outerHTML;n.textContent=old;const b=new Blob([data],{type:"text/html;charset=utf-8"}),url=URL.createObjectURL(b),a=document.createElement("a");a.href=url;a.download="lunar_arcana_v0.6_OFFLINE.html";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2500);toast(T("offlineDone"))}catch(e){toast(T("offlineFail"))}}
+let toastTimer;function toast(msg){let e=document.getElementById("toast");if(!e){e=document.createElement("div");e.id="toast";e.style.cssText="position:absolute;left:50%;bottom:82px;transform:translateX(-50%);z-index:100;background:#17111f;border:1px solid rgba(223,189,114,.25);border-radius:999px;padding:9px 13px;color:#e4c783;font-size:10px;box-shadow:0 12px 30px rgba(0,0,0,.4);max-width:90%;text-align:center;transition:.2s";document.getElementById("app").appendChild(e)}e.textContent=msg;e.style.opacity="1";clearTimeout(toastTimer);toastTimer=setTimeout(()=>e.style.opacity="0",1800)}
 
-let toastTimer;
-function toast(msg){
-  const el=document.getElementById("toast");
-  el.textContent=msg;el.classList.add("show");
-  clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("show"),1900);
-}
-
-/* Mobile navigation */
-function showPage(page){
-  document.getElementById("drawPage").classList.toggle("hidden",page!=="draw");
-  document.getElementById("deckPage").classList.toggle("active",page==="deck");
-  document.getElementById("settingsPage").classList.toggle("active",page==="settings");
-  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-document.querySelectorAll(".nav-btn").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
-
-/* Installable PWA */
-let deferredInstall=null;
-window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e});
-async function installApp(){
-  if(window.matchMedia("(display-mode: standalone)").matches){toast(t("alreadyInstalled"));return}
-  if(deferredInstall){
-    deferredInstall.prompt();
-    await deferredInstall.userChoice;
-    deferredInstall=null;
-    return;
-  }
-  const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
-  toast(isIOS?t("installIOS"):t("installUnavailable"));
-}
-
-/* Offline export */
-function blobToDataURL(blob){
-  return new Promise((resolve,reject)=>{
-    const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(blob);
-  });
-}
-async function fetchImageData(card){
-  if(EMBEDDED_IMAGES[card.code])return EMBEDDED_IMAGES[card.code];
-  const urls=[PRIMARY_BASE+card.code+".jpg",FALLBACK_BASE+card.code+".jpg"];
-  let err;
-  for(const url of urls){
-    try{
-      const res=await fetch(url,{mode:"cors",cache:"force-cache"});
-      if(!res.ok)throw new Error("HTTP "+res.status);
-      return await blobToDataURL(await res.blob());
-    }catch(e){err=e}
-  }
-  throw err||new Error("download failed");
-}
-async function exportOffline(){
-  if(Object.keys(EMBEDDED_IMAGES).length===78){toast(t("offlineDone"));return}
-  toast(t("offlineStart")+"…");
-  const map={...EMBEDDED_IMAGES};
-  try{
-    const queue=deck.filter(c=>!map[c.code]);let cursor=0,done=Object.keys(map).length;
-    async function worker(){
-      while(cursor<queue.length){
-        const card=queue[cursor++];
-        map[card.code]=await fetchImageData(card);done++;
-        if(done%8===0)toast(`${t("offlineStart")} ${done}/78`);
-      }
-    }
-    await Promise.all(Array.from({length:5},worker));
-    const dataScript=document.getElementById("embedded-images");
-    const old=dataScript.textContent;dataScript.textContent=JSON.stringify(map);
-    const html="<!doctype html>\n"+document.documentElement.outerHTML;
-    dataScript.textContent=old;
-    const blob=new Blob([html],{type:"text/html;charset=utf-8"});
-    const url=URL.createObjectURL(blob),a=document.createElement("a");
-    a.href=url;a.download="lunar_arcana_RWS_OFFLINE.html";document.body.appendChild(a);a.click();a.remove();
-    setTimeout(()=>URL.revokeObjectURL(url),3000);toast(t("offlineDone"));
-  }catch(e){console.error(e);toast(t("offlineFail"))}
-}
-
-/* Events */
-document.getElementById("drawBtn").addEventListener("click",reveal);
-document.getElementById("randomBtn").addEventListener("click",randomNumbers);
-document.getElementById("reshuffleBtn").addEventListener("click",reshuffle);
-document.getElementById("offlineBtn").addEventListener("click",exportOffline);
-document.getElementById("offlineBtnMobile").addEventListener("click",exportOffline);
-document.getElementById("installBtn").addEventListener("click",installApp);
-document.getElementById("langQuick").addEventListener("click",()=>applyLanguage(lang==="zh"?"en":"zh"));
-document.querySelectorAll(".lang-choice").forEach(b=>b.addEventListener("click",()=>applyLanguage(b.dataset.lang)));
-document.querySelectorAll(".mode-btn").forEach(b=>b.addEventListener("click",()=>setSpreadCount(Number(b.dataset.count))));
-
-if("serviceWorker" in navigator && location.protocol.startsWith("http")){
-  window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
-}
-
-renderInputs();
-updateSpreadCopy();
-applyLanguage(lang);
-reshuffle();
+document.querySelectorAll(".nav-btn").forEach(b=>b.onclick=()=>{const s=b.dataset.screen;if(s==="home")renderHome();if(s==="spreads")renderSpreads();if(s==="cards")renderCards();if(s==="settings")renderSettings();showScreen(s)});
+document.getElementById("quickLang").onclick=()=>{renderSettings();showScreen("settings")};
+function boot(){document.documentElement.lang=locale;renderAll();showScreen("home");if("serviceWorker" in navigator&&location.protocol.startsWith("http"))window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}))}
+boot();
 </script>
 </body>
 </html>

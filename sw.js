@@ -1,50 +1,5 @@
-const CACHE_NAME="lunar-arcana-v0.5.0";
-const SHELL=["./","./index.html","./manifest.webmanifest"];
-
-self.addEventListener("install",event=>{
-  event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(SHELL)));
-  self.skipWaiting();
-});
-
-self.addEventListener("activate",event=>{
-  event.waitUntil(
-    caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE_NAME).map(k=>caches.delete(k))))
-  );
-  self.clients.claim();
-});
-
-self.addEventListener("fetch",event=>{
-  const req=event.request;
-  if(req.method!=="GET") return;
-
-  const isImage=req.destination==="image";
-  if(isImage){
-    event.respondWith(
-      caches.open(CACHE_NAME).then(async cache=>{
-        const cached=await cache.match(req);
-        if(cached) return cached;
-        try{
-          const fresh=await fetch(req);
-          cache.put(req,fresh.clone());
-          return fresh;
-        }catch(e){
-          return cached || Response.error();
-        }
-      })
-    );
-    return;
-  }
-
-  event.respondWith(
-    caches.match(req).then(cached=>{
-      const network=fetch(req).then(res=>{
-        if(res && res.ok){
-          const clone=res.clone();
-          caches.open(CACHE_NAME).then(cache=>cache.put(req,clone));
-        }
-        return res;
-      }).catch(()=>cached);
-      return cached || network;
-    })
-  );
-});
+const CACHE="lunar-arcana-v0.6.0";
+const CORE=["./","./index.html","./manifest.webmanifest","./assets/icon-192.png","./assets/icon-512.png"];
+self.addEventListener("install",e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)));self.skipWaiting()});
+self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==CACHE).map(x=>caches.delete(x)))));self.clients.claim()});
+self.addEventListener("fetch",e=>{if(e.request.method!=="GET")return;e.respondWith(caches.match(e.request).then(async cached=>{try{const fresh=await fetch(e.request);if(fresh&&fresh.ok)caches.open(CACHE).then(c=>c.put(e.request,fresh.clone()));return fresh}catch(err){return cached||Response.error()}}))});
